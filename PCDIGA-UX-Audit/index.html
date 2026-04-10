@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCDIGA — Audit UX/UI + Análise Competitiva | Abril 2026</title>
+<style>
+  :root {
+    --bg: #0e1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #FF4D23;
+    --accent2: #96DBFA;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --orange: #db6d28;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #0e1117 0%, #1a1040 50%, #0e1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .hero .subtitle {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .hero .meta {
+    margin-top: 20px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .hero .meta span {
+    background: var(--surface);
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-desc {
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-size: 0.95rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card p, .card li {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+
+  .card ul { list-style: none; padding-left: 0; }
+  .card ul li { padding: 6px 0; padding-left: 20px; position: relative; }
+  .card ul li::before { content: ""; position: absolute; left: 0; top: 14px; width: 6px; height: 6px; border-radius: 50%; }
+
+  .severity-critical li::before { background: var(--red); }
+  .severity-high li::before { background: var(--orange); }
+  .severity-medium li::before { background: var(--yellow); }
+  .severity-low li::before { background: var(--blue); }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-critical { background: rgba(248,81,73,0.15); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+  .badge-high { background: rgba(219,109,40,0.15); color: var(--orange); border: 1px solid rgba(219,109,40,0.3); }
+  .badge-medium { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid rgba(210,153,34,0.3); }
+  .badge-low { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid rgba(88,166,255,0.3); }
+  .badge-good { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+
+  .score-ring {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0 auto 16px;
+    position: relative;
+  }
+
+  .score-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 4px;
+    background: conic-gradient(var(--red) 0deg, var(--orange) 120deg, var(--yellow) 240deg, var(--red) 360deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+
+  .score-label {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.8rem; }
+    .container { padding: 24px 16px; }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .brand-col { font-weight: 600; color: var(--text); white-space: nowrap; }
+
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .dot-red { background: var(--red); }
+  .dot-orange { background: var(--orange); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-green { background: var(--green); }
+  .dot-blue { background: var(--blue); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .kpi-value {
+    font-size: 2rem;
+    font-weight: 800;
+  }
+
+  .kpi-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .verdict-box {
+    background: linear-gradient(135deg, rgba(255,77,35,0.08) 0%, rgba(150,219,250,0.08) 100%);
+    border: 1px solid rgba(255,77,35,0.3);
+    border-radius: 16px;
+    padding: 36px;
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  .verdict-box h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+
+  .verdict-box p {
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.9;
+  }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 40px;
+  }
+
+  .toc h3 { margin-bottom: 12px; font-size: 1rem; }
+
+  .toc ol {
+    columns: 2;
+    column-gap: 40px;
+    font-size: 0.9rem;
+    padding-left: 20px;
+  }
+
+  .toc ol li {
+    padding: 4px 0;
+    color: var(--blue);
+    cursor: pointer;
+  }
+
+  .toc ol li a { color: var(--blue); text-decoration: none; }
+  .toc ol li a:hover { text-decoration: underline; }
+
+  .screenshot-frame {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .screenshot-frame .bar {
+    background: var(--surface);
+    padding: 8px 16px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .screenshot-frame .bar .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .screenshot-frame img {
+    width: 100%;
+    display: block;
+  }
+
+  .screenshot-label {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 6px;
+  }
+
+  .comp-color {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .progress-bar {
+    background: var(--surface2);
+    border-radius: 6px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s;
+  }
+
+  .recommendation-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>PCDIGA.com — Audit UX/UI & Análise Competitiva</h1>
+  <p class="subtitle">Relatório completo de análise da experiência de utilizador, problemas identificados, e posicionamento face à concorrência no mercado português de e-commerce tech.</p>
+  <div class="meta">
+    <span>10 Abril 2026</span>
+    <span>Autor: Ricardo Valente</span>
+    <span>Tipo: UX Audit + Competitive Analysis</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- TOC -->
+<nav class="toc">
+  <h3>Índice</h3>
+  <ol>
+    <li><a href="#exec">Sumário Executivo</a></li>
+    <li><a href="#seo">Problemas SEO Críticos</a></li>
+    <li><a href="#ux">Audit UX/UI — PCDIGA</a></li>
+    <li><a href="#branding">Identidade Visual & Branding</a></li>
+    <li><a href="#comp">Análise Competitiva</a></li>
+    <li><a href="#matrix">Matriz Comparativa</a></li>
+    <li><a href="#messaging">Posicionamento & Messaging</a></li>
+    <li><a href="#recs">Recomendações Prioritárias</a></li>
+    <li><a href="#verdict">Veredicto Final</a></li>
+  </ol>
+</nav>
+
+<!-- ====== SECTION 1: EXECUTIVE SUMMARY ====== -->
+<section id="exec">
+  <h2 class="section-title">1. Sumário Executivo</h2>
+  <p class="section-desc">Visão geral dos principais findings desta análise.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--red)">4</div>
+      <div class="kpi-label">Issues Críticos</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--orange)">7</div>
+      <div class="kpi-label">Issues Altos</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--yellow)">9</div>
+      <div class="kpi-label">Issues Médios</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value" style="color:var(--green)">5</div>
+      <div class="kpi-label">Pontos Fortes</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>A PCDIGA apresenta uma identidade visual forte e um posicionamento claro como loja especialista em tecnologia para entusiastas. No entanto, a análise revela <strong style="color:var(--red)">problemas técnicos graves</strong> que comprometem a visibilidade orgânica do site, juntamente com lacunas significativas na experiência de utilizador quando comparada com os principais concorrentes. O issue mais urgente é a tag <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;">robots: noindex</code> presente em todas as páginas auditadas, o que pode estar a impedir completamente a indexação pelo Google.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 2: SEO CRITICAL ====== -->
+<section id="seo">
+  <h2 class="section-title">2. Problemas SEO Críticos</h2>
+  <p class="section-desc">Issues que afetam diretamente a visibilidade e indexação do site nos motores de busca.</p>
+
+  <div class="card">
+    <h3><span class="badge badge-critical">CRITICAL</span> Meta tag robots: noindex em TODAS as páginas</h3>
+    <p>Tanto a homepage como as páginas de categoria (ex: Placas Gráficas) contêm a meta tag <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;">robots: noindex</code>. Isto instrui o Google e outros motores de busca a <strong style="color:var(--red)">não indexar estas páginas</strong>. Se isto está em produção e não apenas numa versão staging/preview, é o problema mais grave possível para SEO — o site está literalmente a pedir para não aparecer nos resultados de pesquisa.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="badge badge-critical">CRITICAL</span> Duplicate meta tags (OG & Twitter)</h3>
+    <p>Todas as meta tags Open Graph e Twitter Card aparecem duplicadas — <code>og:title</code>, <code>og:description</code>, <code>twitter:title</code>, <code>twitter:description</code> surgem com arrays de 2 valores idênticos. A meta <code>description</code> da homepage também aparece duplicada com texto repetido, separado por vírgula. Isto confunde os crawlers e resulta em snippets incorretos nos resultados de pesquisa e partilhas em redes sociais.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="badge badge-high">HIGH</span> Sem og:image na Homepage</h3>
+    <p>A homepage não define uma <code>og:image</code>, o que resulta em previews sem imagem quando o link é partilhado no Facebook, LinkedIn, WhatsApp, etc. A PCComponentes e a Worten têm este campo corretamente preenchido. As páginas de categoria da PCDIGA usam uma imagem placeholder genérica (<code>pcdiga_catalogo800x800px_1.jpg</code>) em vez de imagens representativas da categoria.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="badge badge-high">HIGH</span> Falta de og:locale, og:type, og:url, og:site_name</h3>
+    <p>A PCDIGA não define as Open Graph tags obrigatórias <code>og:locale</code>, <code>og:type</code>, <code>og:url</code> ou <code>og:site_name</code> na homepage. Tanto a PCComponentes (<code>og:locale: pt_PT</code>, <code>og:type: website</code>) como a Worten (<code>og:locale: pt_PT</code>) têm estas tags configuradas corretamente.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 3: UX/UI AUDIT ====== -->
+<section id="ux">
+  <h2 class="section-title">3. Audit UX/UI — PCDIGA.com</h2>
+  <p class="section-desc">Análise detalhada da experiência de utilizador na homepage, navegação, catálogo e product cards.</p>
+
+  <!-- Good things -->
+  <div class="card" style="border-color: rgba(63,185,80,0.3);">
+    <h3><span class="badge badge-good">BEM FEITO</span> Pontos Fortes Identificados</h3>
+    <ul>
+      <li style="padding-left:20px; position:relative;"><span style="position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--green);"></span><strong>Identidade visual forte e reconhecível</strong> — O laranja (#FF4D23) e azul (#1C5A9D) criam uma identidade dual memorável e distinta da concorrência. O logo SVG inline é nítido em todas as resoluções.</li>
+      <li style="padding-left:20px; position:relative;"><span style="position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--green);"></span><strong>Categorização por ícones na homepage</strong> — Os ícones de categoria (Gaming, Laptops, Smartphones, Componentes, etc.) são claros, bem desenhados, e facilitam a navegação rápida para utilizadores que sabem o que procuram.</li>
+      <li style="padding-left:20px; position:relative;"><span style="position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--green);"></span><strong>Foco em nicho tech/gaming</strong> — Posicionamento claro como loja especialista, com "Computadores PCDIGA Gaming" como primeira categoria visível. Transmite autoridade no segmento.</li>
+      <li style="padding-left:20px; position:relative;"><span style="position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--green);"></span><strong>Badges contextuais nos produtos</strong> — Labels como "Oferta 1º Mês PCDIGACare" e "Novidade" nos product cards adicionam valor informacional.</li>
+      <li style="padding-left:20px; position:relative;"><span style="position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--green);"></span><strong>Tipografia Lato — legível e moderna</strong> — A fonte Lato a 16px no body oferece boa legibilidade, superior ao body de 12px da PCComponentes e 12px da Worten.</li>
+    </ul>
+  </div>
+
+  <!-- Issues -->
+  <div class="grid-2">
+    <div class="card">
+      <h3><span class="badge badge-critical">CRITICAL</span> Imagens do banner sem alt text</h3>
+      <p>Os banners rotativos da homepage — que são o primeiro elemento visual que o utilizador vê — usam URLs CDN (flavedo.io) sem qualquer texto alternativo descritivo. São completamente opacos para leitores de ecrã e para o Google Image Search. A PCComponentes tem alt text em todas as imagens dos banners.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-critical">CRITICAL</span> Banners sem contexto de conteúdo</h3>
+      <p>Os banners da homepage são imagens puras sem texto acompanhante no HTML. Não há headlines, descriptions ou CTAs textuais associados. Se a imagem não carregar, o utilizador vê literalmente nada. Os concorrentes sobrepõem texto HTML sobre as imagens, garantindo que a mensagem passa sempre.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-high">HIGH</span> Ausência de Trust Signals</h3>
+      <p>A PCDIGA não exibe na homepage badges de confiança visíveis como: envio grátis, política de devoluções, garantia, tempo de entrega. A PCComponentes tem uma barra inteira dedicada a isto (envio grátis >50€, entrega 24h, devoluções gratuitas, garantia 24h). A Worten tem o mesmo (entregas grátis >35€, 4x sem juros, devoluções em loja, preço mínimo garantido). São elementos fundamentais de conversão em e-commerce.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-high">HIGH</span> Sem sistema de reviews/ratings</h3>
+      <p>Os product cards da PCDIGA não mostram ratings nem número de reviews. A PCComponentes exibe ratings de 1-5 estrelas + contagem de opiniões em todos os produtos (ex: "4,8/5 — 885 opiniões"). A Worten também integra reviews. Isto é um diferenciador enorme para a decisão de compra — social proof é essencial em e-commerce tech.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-high">HIGH</span> Sem informação de entrega nos cards</h3>
+      <p>Os product cards não mostram datas estimadas de entrega. A PCComponentes mostra explicitamente "Entrega a segunda-feira, 13 de abril" em cada produto. Isto reduz a incerteza do comprador e é um fator decisivo na compra impulsiva.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-high">HIGH</span> Sem indicação de preço original/desconto</h3>
+      <p>Nos dados analisados, os products cards da PCDIGA não evidenciam o preço original cortado nem a percentagem de desconto. A PCComponentes usa badges como "-26%", "-17%" com preço original riscado + "Preço mínimo histórico!". A Worten usa "Até 50% desconto direto". Estas indicações visuais são gatilhos de conversão poderosos.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-high">HIGH</span> Homepage demasiado "catalog-first"</h3>
+      <p>A homepage vai diretamente de banners para categorias e depois para listagem de novidades. Faltam secções editoriais/storytelling: destaques curados, "mais vendidos", "recomendados para ti", guias de compra, etc. A PCComponentes tem "Ofertas TOP", "Baseado na tua navegação", "Mais vendidos" e "Blog". A Worten tem "Tendências do momento" e conteúdo editorial integrado.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-medium">MEDIUM</span> Sem marketplace/seller info</h3>
+      <p>A PCComponentes indica "Enviado e vendido por PcComponentes" ou pelo marketplace seller em cada produto, criando transparência. A Worten faz o mesmo com "seller_id". A PCDIGA não mostra este tipo de informação — se tiver marketplace, não é evidente.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-medium">MEDIUM</span> Sem newsletter / retenção visível</h3>
+      <p>Não foi identificado um formulário de newsletter nem pop-up de captura de email na homepage. A Worten promove activamente a newsletter com "10€ em desconto" como incentivo. A PCComponentes tem chatbot de assistência virtual visível. Mecanismos de retenção são essenciais para e-commerce.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-medium">MEDIUM</span> Ausência de blog/conteúdo</h3>
+      <p>A homepage não referencia nem linka para conteúdo editorial. A PCComponentes integra uma secção "Descobre o nosso Blog" com artigos como guias de compra de processadores, smart TVs, antivírus e placas gráficas. A Worten tem artigos sobre tendências, gaming e comparativos. Conteúdo editorial é fundamental para SEO e autoridade.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-medium">MEDIUM</span> Filtros de categorias limitados</h3>
+      <p>Na página de Placas Gráficas, a estrutura de filtros e sorting não é tão rica nem visível como a da concorrência. A PCComponentes permite filtrar por marca, preço, ratings, e ordena por "mais vendidos". A Worten tem filtros por marca, modelo, gama de preço, seller, etc.</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="badge badge-low">LOW</span> Serviços pouco visíveis</h3>
+      <p>O "PCDIGACare" aparece como badge em alguns produtos mas não é explicado na homepage. A Worten tem uma secção inteira de serviços visível (reparações, instalações, bricolage, IPTV). Explicar serviços pós-venda aumenta percepção de valor.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 4: BRANDING ====== -->
+<section id="branding">
+  <h2 class="section-title">4. Identidade Visual & Branding</h2>
+  <p class="section-desc">Comparação dos design systems e identidade visual entre players.</p>
+
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Dimensão</th>
+          <th><span class="comp-color" style="background:#FF4D23;"></span>PCDIGA</th>
+          <th><span class="comp-color" style="background:#FF6000;"></span>PCComponentes</th>
+          <th><span class="comp-color" style="background:#E51B15;"></span>Worten</th>
+          <th><span class="comp-color" style="background:#232F3E;"></span>Amazon.es</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="brand-col">Cor Primária</td>
+          <td><span class="comp-color" style="background:#FF4D23;"></span>#FF4D23</td>
+          <td><span class="comp-color" style="background:#FF6000;"></span>#FF6000</td>
+          <td><span class="comp-color" style="background:#E51B15;"></span>#E51B15</td>
+          <td><span class="comp-color" style="background:#232F3E;"></span>#232F3E</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Cor Secundária</td>
+          <td><span class="comp-color" style="background:#1C5A9D;"></span>#1C5A9D (azul)</td>
+          <td>—</td>
+          <td><span class="comp-color" style="background:#0028F5;"></span>#0028F5 (azul links)</td>
+          <td><span class="comp-color" style="background:#FFD814;"></span>#FFD814 (amarelo)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Fonte Principal</td>
+          <td>Lato</td>
+          <td>Open Sans</td>
+          <td>Open Sans</td>
+          <td>Arial</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Body Font Size</td>
+          <td>16px</td>
+          <td>12px</td>
+          <td>12px</td>
+          <td>14px</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Background</td>
+          <td>#F6F6F6 (cinza claro)</td>
+          <td>#FFFFFF (branco)</td>
+          <td>#F6F6F6 (cinza claro)</td>
+          <td>#FFFFFF (branco)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Border Radius</td>
+          <td>6px (botões e inputs)</td>
+          <td>4px</td>
+          <td>4px</td>
+          <td>8px (inputs), 3px (botões)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Color Scheme</td>
+          <td>Light, fundo neutro</td>
+          <td>Light, fundo branco</td>
+          <td>Light, fundo neutro</td>
+          <td>Light, fundo branco</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Tom</td>
+          <td>Moderno, tech enthusiast</td>
+          <td>Moderno, high energy</td>
+          <td>Profissional, mainstream</td>
+          <td>Profissional, utilitário</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 5: COMPETITIVE ANALYSIS ====== -->
+<section id="comp">
+  <h2 class="section-title">5. Análise Competitiva</h2>
+  <p class="section-desc">Perfil detalhado de cada concorrente e os seus pontos fortes e fracos.</p>
+
+  <!-- PCComponentes -->
+  <div class="card">
+    <h3><span class="comp-color" style="background:#FF6000;"></span>PCComponentes.pt</h3>
+    <div class="grid-2" style="margin-top:16px;">
+      <div>
+        <p style="color:var(--green);font-weight:600;margin-bottom:8px;">Pontos Fortes</p>
+        <ul class="severity-low">
+          <li><strong>Trust signals excelentes</strong> — barra de benefícios sempre visível (envio grátis >50€, entrega 24h, devoluções grátis, garantia de solução)</li>
+          <li><strong>Social proof massivo</strong> — ratings + reviews visíveis em todos os product cards (até 7270 reviews num monitor AOC)</li>
+          <li><strong>Datas de entrega específicas</strong> — "Entrega a segunda-feira, 13 de abril" em cada produto</li>
+          <li><strong>Preço mínimo histórico</strong> — badge exclusiva que gera urgência</li>
+          <li><strong>PC Builder (configurador)</strong> — ferramenta diferenciadora para entusiastas</li>
+          <li><strong>Blog integrado</strong> — guias de compra que alimentam SEO</li>
+          <li><strong>Marketplace transparente</strong> — indica seller em cada produto</li>
+          <li><strong>Marca própria forte</strong> — PcCom (desktops), Alurin (portáteis/monitores)</li>
+          <li><strong>Assistente virtual</strong> — chatbot visível na homepage</li>
+        </ul>
+      </div>
+      <div>
+        <p style="color:var(--red);font-weight:600;margin-bottom:8px;">Pontos Fracos</p>
+        <ul class="severity-critical">
+          <li>Body font size 12px — pode ser difícil de ler em alguns ecrãs</li>
+          <li>Homepage muito longa e repetitiva (secções duplicadas no footer)</li>
+          <li>OG tags vazias na homepage (og:title e og:description vazios)</li>
+          <li>Catálogo mais generalista (aspiradores, café, tablets) — dilui o posicionamento tech</li>
+          <li>Menos presença/reconhecimento de marca em Portugal vs. Espanha</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Worten -->
+  <div class="card">
+    <h3><span class="comp-color" style="background:#E51B15;"></span>Worten.pt</h3>
+    <div class="grid-2" style="margin-top:16px;">
+      <div>
+        <p style="color:var(--green);font-weight:600;margin-bottom:8px;">Pontos Fortes</p>
+        <ul class="severity-low">
+          <li><strong>Presença omnicanal</strong> — lojas físicas + online com serviços como devoluções em loja, recolha em loja</li>
+          <li><strong>Financiamento</strong> — "4x sem juros" com Cartão Universo (TAEG 19%)</li>
+          <li><strong>Preço mínimo garantido</strong> — diferenciador competitivo forte</li>
+          <li><strong>App mobile dedicada</strong> — promovida com smart banner no site</li>
+          <li><strong>Catálogo ultra-amplo</strong> — tech + casa + jardim + bebé + desporto + beleza</li>
+          <li><strong>Worten Life + Passatempos</strong> — engagement e gamificação</li>
+          <li><strong>Newsletter incentivada</strong> — 10€ de desconto imediato na subscrição</li>
+          <li><strong>Conteúdo editorial integrado</strong> — tendências, melhores produtos, artigos</li>
+          <li><strong>Serviços pós-venda extensos</strong> — reparações, instalações, bricolage, pintura, IPTV</li>
+          <li><strong>Voucher E-Lar</strong> — integração com programas governamentais</li>
+        </ul>
+      </div>
+      <div>
+        <p style="color:var(--red);font-weight:600;margin-bottom:8px;">Pontos Fracos</p>
+        <ul class="severity-critical">
+          <li>Homepage muito pesada e caótica — excesso de banners promocionais</li>
+          <li>Demasiada informação acima do fold — difícil discernir hierarquia</li>
+          <li>Posicionamento diluído — tenta ser tudo para todos</li>
+          <li>Menos credibilidade no segmento gaming/componentes vs. PCDIGA</li>
+          <li>Carregamento mais lento devido à quantidade de assets</li>
+          <li>Marketplace sellers menos curados (pior experiência de terceiros)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amazon -->
+  <div class="card">
+    <h3><span class="comp-color" style="background:#232F3E;"></span>Amazon.es</h3>
+    <div class="grid-2" style="margin-top:16px;">
+      <div>
+        <p style="color:var(--green);font-weight:600;margin-bottom:8px;">Pontos Fortes</p>
+        <ul class="severity-low">
+          <li><strong>Ecossistema Prime</strong> — entrega rápida, streaming, benefícios cruzados</li>
+          <li><strong>Personalização avançada</strong> — recomendações por ML, "comprados juntos"</li>
+          <li><strong>Reviews massivos</strong> — sistema de reviews mais robusto do mercado</li>
+          <li><strong>Catálogo infinito</strong> — praticamente tudo disponível</li>
+          <li><strong>Logística superior</strong> — entregas em 1 dia para Prime</li>
+          <li><strong>Confiança global</strong> — marca reconhecida mundialmente</li>
+          <li><strong>Sistema A-to-Z Guarantee</strong> — proteção ao comprador</li>
+        </ul>
+      </div>
+      <div>
+        <p style="color:var(--red);font-weight:600;margin-bottom:8px;">Pontos Fracos</p>
+        <ul class="severity-critical">
+          <li>Sem presença local em Portugal (amazon.es serve o mercado ibérico)</li>
+          <li>UI datada — design utilitário sem apelo visual</li>
+          <li>Sem expertise tech/gaming — é generalista</li>
+          <li>Marketplace caótico — muitos sellers duvidosos em tech</li>
+          <li>Suporte ao cliente em Espanhol primariamente</li>
+          <li>Sem lojas físicas em Portugal</li>
+          <li>Preços nem sempre os mais competitivos em componentes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 6: MATRIX ====== -->
+<section id="matrix">
+  <h2 class="section-title">6. Matriz Comparativa</h2>
+  <p class="section-desc">Comparação funcional direta entre todos os players.</p>
+
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature / Capability</th>
+          <th>PCDIGA</th>
+          <th>PCComponentes</th>
+          <th>Worten</th>
+          <th>Amazon.es</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="brand-col">Reviews/Ratings nos produtos</td>
+          <td><span class="dot dot-red"></span>Não visível</td>
+          <td><span class="dot dot-green"></span>Sim (estrelas + contagem)</td>
+          <td><span class="dot dot-green"></span>Sim</td>
+          <td><span class="dot dot-green"></span>Sim (extensivo)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Trust signals na homepage</td>
+          <td><span class="dot dot-red"></span>Ausentes</td>
+          <td><span class="dot dot-green"></span>Barra completa</td>
+          <td><span class="dot dot-green"></span>Barra completa</td>
+          <td><span class="dot dot-green"></span>Prime badges</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Data de entrega nos cards</td>
+          <td><span class="dot dot-red"></span>Não</td>
+          <td><span class="dot dot-green"></span>Sim (data exacta)</td>
+          <td><span class="dot dot-yellow"></span>Parcial</td>
+          <td><span class="dot dot-green"></span>Sim</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Preço original / % desconto</td>
+          <td><span class="dot dot-red"></span>Não visível</td>
+          <td><span class="dot dot-green"></span>Sim + "preço mín. histórico"</td>
+          <td><span class="dot dot-green"></span>Sim + "sobre PVPr"</td>
+          <td><span class="dot dot-green"></span>Sim</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Blog / Conteúdo editorial</td>
+          <td><span class="dot dot-red"></span>Não na homepage</td>
+          <td><span class="dot dot-green"></span>Sim (guias, rankings)</td>
+          <td><span class="dot dot-green"></span>Sim (artigos, trends)</td>
+          <td><span class="dot dot-yellow"></span>Mínimo</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Personalização ("para ti")</td>
+          <td><span class="dot dot-red"></span>Não</td>
+          <td><span class="dot dot-green"></span>"Baseado na tua navegação"</td>
+          <td><span class="dot dot-green"></span>"Ofertas para ti" (login)</td>
+          <td><span class="dot dot-green"></span>Extensiva (ML)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">PC Builder / Configurador</td>
+          <td><span class="dot dot-yellow"></span>PCDIGA Gaming (pré-config)</td>
+          <td><span class="dot dot-green"></span>Configurador completo</td>
+          <td><span class="dot dot-red"></span>Não</td>
+          <td><span class="dot dot-red"></span>Não</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Marketplace / Sellers</td>
+          <td><span class="dot dot-yellow"></span>Não evidente</td>
+          <td><span class="dot dot-green"></span>Sim (transparente)</td>
+          <td><span class="dot dot-green"></span>Sim</td>
+          <td><span class="dot dot-green"></span>Sim (massivo)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Lojas físicas em Portugal</td>
+          <td><span class="dot dot-green"></span>Sim (especializadas)</td>
+          <td><span class="dot dot-yellow"></span>Limitado</td>
+          <td><span class="dot dot-green"></span>+200 lojas</td>
+          <td><span class="dot dot-red"></span>Não</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Financiamento</td>
+          <td><span class="dot dot-yellow"></span>Limitado</td>
+          <td><span class="dot dot-yellow"></span>Parcial</td>
+          <td><span class="dot dot-green"></span>Cartão Universo 4x s/ juros</td>
+          <td><span class="dot dot-yellow"></span>Parcial</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Serviços pós-venda</td>
+          <td><span class="dot dot-yellow"></span>PCDIGACare (pouco visível)</td>
+          <td><span class="dot dot-green"></span>Centro de Suporte</td>
+          <td><span class="dot dot-green"></span>Extensivos (reparação, instalação)</td>
+          <td><span class="dot dot-green"></span>A-to-Z Guarantee</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Newsletter incentivada</td>
+          <td><span class="dot dot-red"></span>Não visível</td>
+          <td><span class="dot dot-yellow"></span>Mínimo</td>
+          <td><span class="dot dot-green"></span>10€ desconto</td>
+          <td><span class="dot dot-yellow"></span>Via conta</td>
+        </tr>
+        <tr>
+          <td class="brand-col">SEO (meta tags correctas)</td>
+          <td><span class="dot dot-red"></span>noindex + duplicados</td>
+          <td><span class="dot dot-yellow"></span>OG tags vazias</td>
+          <td><span class="dot dot-green"></span>Correcto</td>
+          <td><span class="dot dot-green"></span>Correcto</td>
+        </tr>
+        <tr>
+          <td class="brand-col">App mobile dedicada</td>
+          <td><span class="dot dot-yellow"></span>Não promovida</td>
+          <td><span class="dot dot-yellow"></span>Disponível</td>
+          <td><span class="dot dot-green"></span>Activamente promovida</td>
+          <td><span class="dot dot-green"></span>Sim</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Alt text em imagens</td>
+          <td><span class="dot dot-red"></span>Banners sem alt</td>
+          <td><span class="dot dot-green"></span>Bom (alt descritivo)</td>
+          <td><span class="dot dot-yellow"></span>Parcial</td>
+          <td><span class="dot dot-green"></span>Sim</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 7: POSITIONING ====== -->
+<section id="messaging">
+  <h2 class="section-title">7. Posicionamento & Messaging</h2>
+  <p class="section-desc">Como cada player se posiciona e comunica a sua proposta de valor.</p>
+
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Dimensão</th>
+          <th>PCDIGA</th>
+          <th>PCComponentes</th>
+          <th>Worten</th>
+          <th>Amazon.es</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="brand-col">Tagline</td>
+          <td>"A tua loja de confiança"</td>
+          <td>"Loja de Informática e Tecnologia online"</td>
+          <td>"Tudo o que precisas"</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Proposta de valor core</td>
+          <td>Especialista tech, preços competitivos, confiança</td>
+          <td>Líder online em tech, 80K+ produtos, compromissos claros</td>
+          <td>Conveniência total: tech + casa + loja física</td>
+          <td>Tudo, rápido, barato (Prime)</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Público-alvo primário</td>
+          <td>Entusiastas tech/gaming, Portugal</td>
+          <td>Tech-savvy consumers, Ibéria</td>
+          <td>Consumidor mainstream, Portugal</td>
+          <td>Consumidor geral, global</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Diferenciador claimed</td>
+          <td>Especialização + lojas PCDIGA</td>
+          <td>Compromissos (24h entrega, garantia 24h)</td>
+          <td>Omnicanal + preço mínimo garantido</td>
+          <td>Prime + catálogo + logística</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Tom de voz</td>
+          <td>Directo, tech-native</td>
+          <td>Amigável, informativo</td>
+          <td>Promocional, mainstream</td>
+          <td>Funcional, neutro</td>
+        </tr>
+        <tr>
+          <td class="brand-col">Categoria positioning</td>
+          <td>Loja especialista tech</td>
+          <td>Superstore de tecnologia</td>
+          <td>Department store digital</td>
+          <td>Everything store</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <h3>Positioning Map — PCDIGA no mercado</h3>
+    <p style="margin-bottom:16px;">Eixos: <strong>Especialização Tech</strong> (vertical) vs. <strong>Escala / Variedade de catálogo</strong> (horizontal)</p>
+    <div style="position:relative;width:100%;max-width:600px;height:400px;margin:0 auto;border-left:2px solid var(--border);border-bottom:2px solid var(--border);">
+      <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:0.75rem;color:var(--text-muted);">+ Especialização Tech</div>
+      <div style="position:absolute;bottom:-25px;right:0;font-size:0.75rem;color:var(--text-muted);">+ Escala & Variedade</div>
+
+      <!-- PCDIGA -->
+      <div style="position:absolute;top:15%;left:20%;text-align:center;">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.7rem;margin:0 auto;">PCD</div>
+        <div style="font-size:0.75rem;margin-top:4px;color:var(--accent);font-weight:600;">PCDIGA</div>
+      </div>
+
+      <!-- PCComponentes -->
+      <div style="position:absolute;top:25%;left:55%;text-align:center;">
+        <div style="width:48px;height:48px;border-radius:50%;background:#FF6000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.65rem;margin:0 auto;">PCC</div>
+        <div style="font-size:0.75rem;margin-top:4px;color:#FF6000;font-weight:600;">PCComponentes</div>
+      </div>
+
+      <!-- Worten -->
+      <div style="position:absolute;top:55%;left:70%;text-align:center;">
+        <div style="width:48px;height:48px;border-radius:50%;background:#E51B15;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.7rem;margin:0 auto;color:white;">W</div>
+        <div style="font-size:0.75rem;margin-top:4px;color:#E51B15;font-weight:600;">Worten</div>
+      </div>
+
+      <!-- Amazon -->
+      <div style="position:absolute;top:65%;left:88%;text-align:center;">
+        <div style="width:48px;height:48px;border-radius:50%;background:#232F3E;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.7rem;margin:0 auto;color:#FFD814;">A</div>
+        <div style="font-size:0.75rem;margin-top:4px;color:var(--text-muted);font-weight:600;">Amazon.es</div>
+      </div>
+    </div>
+    <p style="margin-top:32px;font-size:0.85rem;">A PCDIGA ocupa uma posição privilegiada no quadrante de alta especialização / escala menor, que é um posicionamento defensável. O risco é que a PCComponentes está a aproximar-se deste quadrante com marcas próprias (PcCom) e configurador, enquanto mantém maior escala. A estratégia da PCDIGA deve reforçar a sua autoridade no nicho, não competir em amplitude.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 8: RECOMMENDATIONS ====== -->
+<section id="recs">
+  <h2 class="section-title">8. Recomendações Prioritárias</h2>
+  <p class="section-desc">Ações ordenadas por impacto e urgência, do mais crítico ao nice-to-have.</p>
+
+  <div class="card" style="border-color:rgba(248,81,73,0.4);">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">1</span> Corrigir meta tag robots: noindex <span class="badge badge-critical">URGENTE</span></h3>
+    <p>Verificar imediatamente se o <code>robots: noindex</code> está presente em produção (e não apenas num ambiente de staging/preview que o scraper possa ter acedido). Se estiver em produção, a remoção desta tag é a ação mais impactante possível — literalmente a diferença entre estar e não estar no Google. Depois de corrigir, submeter sitemap atualizado no Google Search Console e monitorizar indexação.</p>
+  </div>
+
+  <div class="card" style="border-color:rgba(248,81,73,0.4);">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">2</span> Corrigir meta tags duplicadas <span class="badge badge-critical">URGENTE</span></h3>
+    <p>Auditar o sistema que gera as meta tags (provavelmente Next.js dado o <code>next-size-adjust</code> detectado) e garantir que <code>og:title</code>, <code>og:description</code>, <code>twitter:title</code>, <code>twitter:description</code> e <code>description</code> aparecem apenas uma vez por página. Adicionar <code>og:locale</code>, <code>og:type</code>, <code>og:url</code>, <code>og:site_name</code> e uma <code>og:image</code> representativa.</p>
+  </div>
+
+  <div class="card" style="border-color:rgba(219,109,40,0.4);">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">3</span> Adicionar Trust Signals à homepage <span class="badge badge-high">ALTA</span></h3>
+    <p>Criar uma barra de benefícios persistente (logo abaixo do header ou entre banners e categorias) com: envio grátis a partir de X€, tempo de entrega, política de devoluções, garantia. Inspiração directa: a barra de compromissos da PCComponentes. Isto é o elemento com maior impacto na taxa de conversão depois de corrigir os issues técnicos.</p>
+  </div>
+
+  <div class="card" style="border-color:rgba(219,109,40,0.4);">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">4</span> Enriquecer Product Cards <span class="badge badge-high">ALTA</span></h3>
+    <p>Adicionar aos product cards: (a) sistema de ratings/reviews com estrelas + contagem; (b) preço original riscado + percentagem de desconto; (c) data estimada de entrega; (d) badge "seller" se aplicável. Cada um destes elementos é comprovadamente impactante na conversão — a PCComponentes tem todos.</p>
+  </div>
+
+  <div class="card" style="border-color:rgba(219,109,40,0.4);">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">5</span> Alt text em todas as imagens <span class="badge badge-high">ALTA</span></h3>
+    <p>Todos os banners e imagens promocionais devem ter alt text descritivo. Prioridade nos banners da homepage (actualmente completamente vazios). Isto impacta SEO (Google Images), acessibilidade (WCAG 1.1.1), e garante fallback quando as imagens não carregam.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">6</span> Secções editoriais na Homepage <span class="badge badge-medium">MÉDIA</span></h3>
+    <p>Reorganizar a homepage para incluir: "Mais Vendidos", "Destaques da Semana", "Novidades" (já existe), e "Guias de Compra / Blog". Considerar uma secção de personalização ("Recomendado para ti") para utilizadores logados. Isto aumenta o tempo de permanência na página e a probabilidade de descoberta de produtos.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">7</span> Tornar PCDIGACare visível e valioso <span class="badge badge-medium">MÉDIA</span></h3>
+    <p>O PCDIGACare é mencionado como badge mas nunca explicado. Criar uma secção na homepage ou landing page dedicada que explique claramente o que inclui, quanto custa, e porque vale a pena. Inspiração: a secção de serviços da Worten. Serviços pós-venda são diferenciadores competitivos difíceis de copiar.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">8</span> Newsletter com incentivo + Retenção <span class="badge badge-medium">MÉDIA</span></h3>
+    <p>Implementar captura de email com incentivo (ex: 5€ de desconto na primeira compra, ou acesso antecipado a promoções). A Worten oferece 10€. Adicionar também alertas de descida de preço — feature mencionada pela Worten que é muito valorizada por compradores de tecnologia que esperam pelo preço certo.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">9</span> Investir em Conteúdo / Blog <span class="badge badge-medium">MÉDIA</span></h3>
+    <p>Criar uma secção de blog/conteúdo com guias de compra (melhores placas gráficas 2026, como escolher um portátil gaming, etc.). A PCComponentes já faz isto com sucesso. Conteúdo editorial posiciona a marca como autoridade, alimenta SEO orgânico, e gera tráfego de topo de funil que converte a longo prazo.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="display:flex;align-items:center;gap:12px;"><span class="recommendation-number">10</span> Configurador de PC completo <span class="badge badge-low">BAIXA</span></h3>
+    <p>A PCDIGA já tem "Computadores PCDIGA Gaming" (pré-configurados), mas um configurador peça a peça como o da PCComponentes seria um diferenciador enorme para entusiastas — o público-alvo primário da PCDIGA. Verifica compatibilidade de componentes e oferece upsell natural.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ====== SECTION 9: VERDICT ====== -->
+<section id="verdict">
+  <h2 class="section-title">9. Veredicto Final</h2>
+
+  <div class="verdict-box">
+    <h2>Avançar com ajustes urgentes + roadmap de melhorias</h2>
+    <p>A PCDIGA tem uma base sólida — identidade visual forte, posicionamento claro no nicho tech/gaming, e lojas físicas que nenhum pure player pode replicar. No entanto, o site está significativamente atrás dos concorrentes em elementos fundamentais de e-commerce: trust signals, social proof, informação de entrega, e sobretudo, a saúde técnica do SEO.<br><br>
+    As recomendações #1 e #2 (meta tags) devem ser resolvidas <strong>esta semana</strong> — se o <code>noindex</code> está em produção, cada dia é tráfego orgânico perdido. As recomendações #3 a #5 (trust signals, product cards, alt text) devem ser implementadas no <strong>próximo sprint</strong>. As restantes (#6 a #10) compõem um roadmap de 2-3 meses que elevará a experiência ao nível da PCComponentes, mantendo a identidade diferenciada da PCDIGA.</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>PCDIGA UX/UI Audit & Competitive Analysis — Abril 2026<br>
+  Gerado com dados recolhidos via Firecrawl scraping + análise AI<br>
+  Relatório preparado para Ricardo Valente — PCDIGA</p>
+</footer>
+
+</body>
+</html>
