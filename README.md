@@ -1,1 +1,1 @@
-# PCDIGA Design Reports / Repositório de relatórios de UI Design Review.
+# PCDIGA Repositório de relatórios de UI Design Review.
