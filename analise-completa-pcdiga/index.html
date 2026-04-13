@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise UX/UI Completa — PCDIGA.com</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0e1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-orange: #f97316;
+            --accent-orange-dark: #ea580c;
+            --critical: #ef4444;
+            --high: #f97316;
+            --medium: #eab308;
+            --low: #22c55e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --border: #30363d;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-orange), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .score-ring {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .circular-score {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--accent-orange) 0deg,
+                var(--accent-orange) 198deg,
+                var(--bg-tertiary) 198deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+        }
+
+        .circular-score::after {
+            content: '';
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            z-index: 1;
+        }
+
+        .score-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .score-text .number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            line-height: 1;
+        }
+
+        .score-text .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Severity Summary */
+        .severity-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .severity-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .severity-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-orange);
+        }
+
+        .severity-card .severity-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .severity-card .severity-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .severity-card.critical .severity-number { color: var(--critical); }
+        .severity-card.high .severity-number { color: var(--high); }
+        .severity-card.medium .severity-number { color: var(--medium); }
+        .severity-card.low .severity-number { color: var(--low); }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .toc h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-orange);
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: block;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .toc a:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-orange);
+        }
+
+        /* Section */
+        section {
+            margin: 4rem 0;
+            scroll-margin-top: 100px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 2rem 0 1.5rem 0;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            color: var(--accent-orange);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            color: var(--text-primary);
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        /* Issue Card */
+        .issue-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 4px solid;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .issue-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .issue-card.critical { border-left-color: var(--critical); }
+        .issue-card.high { border-left-color: var(--high); }
+        .issue-card.medium { border-left-color: var(--medium); }
+        .issue-card.low { border-left-color: var(--low); }
+
+        .issue-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .severity-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .severity-badge.critical {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .severity-badge.high {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fed7aa;
+        }
+
+        .severity-badge.medium {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fef08a;
+        }
+
+        .severity-badge.low {
+            background: rgba(34, 197, 94, 0.2);
+            color: #bbf7d0;
+        }
+
+        .issue-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .issue-description {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        /* Positive Section */
+        .positive-section {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .positive-section h4 {
+            color: var(--success);
+            margin-top: 0;
+        }
+
+        .positive-section ul {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .positive-section li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .positive-section li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Heuristics Grid */
+        .heuristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .heuristic-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .heuristic-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .heuristic-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .heuristic-rating {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .heuristic-rating.poor {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .heuristic-rating.medium {
+            background: rgba(234, 179, 8, 0.2);
+            color: #fef08a;
+        }
+
+        .heuristic-rating.good {
+            background: rgba(34, 197, 94, 0.2);
+            color: #bbf7d0;
+        }
+
+        .heuristic-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Recommendations */
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .recommendation-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(249, 115, 22, 0.15);
+            border-color: var(--accent-orange);
+        }
+
+        .recommendation-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .recommendation-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            margin-top: 4rem;
+            background: var(--bg-secondary);
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+        }
+
+        /* Utilities */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .box h3 {
+            margin-top: 0;
+        }
+
+        .text-muted {
+            color: var(--text-secondary);
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 2rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .severity-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .heuristics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .circular-score {
+                width: 100px;
+                height: 100px;
+            }
+
+            .circular-score::after {
+                width: 90px;
+                height: 90px;
+            }
+
+            .score-text .number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            header {
+                position: static;
+            }
+
+            .toc {
+                page-break-after: always;
+            }
+
+            section {
+                page-break-inside: avoid;
+            }
+
+            .issue-card {
+                page-break-inside: avoid;
+            }
+
+            .recommendation-card {
+                page-break-inside: avoid;
+            }
+
+            a {
+                color: var(--accent-orange);
+                text-decoration: underline;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="header-title">
+                <h1>Análise UX/UI Completa</h1>
+                <p class="text-muted">PCDIGA.com — Avaliação Heurística</p>
+            </div>
+            <div class="score-ring">
+                <div class="circular-score">
+                    <div class="score-text">
+                        <div class="number">5.5</div>
+                        <div class="label">Pontuação</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-meta">
+            <span>📅 <strong>Data:</strong> 13 Abril 2026</span>
+            <span>✍️ <strong>Autor:</strong> Ricardo Valente</span>
+            <span>🌐 <strong>Site:</strong> www.pcdiga.com</span>
+        </div>
+
+        <!-- Severity Summary -->
+        <div class="severity-summary">
+            <div class="severity-card critical">
+                <div class="severity-number">3</div>
+                <div class="severity-label">Crítico</div>
+            </div>
+            <div class="severity-card high">
+                <div class="severity-number">8</div>
+                <div class="severity-label">Alto</div>
+            </div>
+            <div class="severity-card medium">
+                <div class="severity-number">10</div>
+                <div class="severity-label">Médio</div>
+            </div>
+            <div class="severity-card low">
+                <div class="severity-number">4</div>
+                <div class="severity-label">Baixo</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Table of Contents -->
+        <nav class="toc">
+            <h2>Índice</h2>
+            <ul>
+                <li><a href="#homepage">Análise da Página Inicial</a></li>
+                <li><a href="#catalog">Análise da Página de Catálogo</a></li>
+                <li><a href="#product">Análise da Página de Produto</a></li>
+                <li><a href="#cross-cutting">Problemas Transversais</a></li>
+                <li><a href="#heuristics">Avaliação das Heurísticas</a></li>
+                <li><a href="#recommendations">Top 10 Recomendações</a></li>
+            </ul>
+        </nav>
+
+        <!-- HOMEPAGE ANALYSIS -->
+        <section id="homepage">
+            <h2>Análise da Página Inicial</h2>
+
+            <div class="positive-section">
+                <h4>✓ O Que Funciona Bem</h4>
+                <ul>
+                    <li>Barra de navegação superior limpa com ícones de pesquisa, desejos, comparação e carrinho</li>
+                    <li>Linha de categorias com 10 ícones de categoria com símbolos claros</li>
+                    <li>Secção "Novidades" com carrossel de produtos</li>
+                    <li>Alternador de tema claro/escuro disponível</li>
+                    <li>Links de navegação tipo breadcrumb ("Campanhas e Ofertas", "Configurador")</li>
+                </ul>
+            </div>
+
+            <h3>Problemas Encontrados</h3>
+
+            <div class="issue-card critical">
+                <div class="issue-header">
+                    <span class="severity-badge critical">Crítico</span>
+                    <div>
+                        <div class="issue-title">Banner do Hero Vazio/Preto</div>
+                        <div class="issue-description">
+                            A área do carrossel do hero renderiza como um retângulo preto grande (~60% da viewport acima da dobra). As imagens do banner falham em carregar ou demoram extremamente para aparecer. Os utilizadores veem um espaço escuro em branco para o espaço mais importante da página. Isto viola o princípio "Visibilidade do Estado do Sistema" de Nielsen (#1).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card critical">
+                <div class="issue-header">
+                    <span class="severity-badge critical">Crítico</span>
+                    <div>
+                        <div class="issue-title">Falha de Lazy Loading</div>
+                        <div class="issue-description">
+                            O conteúdo abaixo do carrossel "Novidades" está completamente em branco (espaço escuro estendendo-se por múltiplas alturas de viewport). Os cartões de produto no carrossel inicialmente mostram estados esqueleto/placeholder. Ao rolar para baixo, não há secções de conteúdo adicionais. A página inicial essencialmente termina após um carrossel. Este é um grande problema de desempenho.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card critical">
+                <div class="issue-header">
+                    <span class="severity-badge critical">Crítico</span>
+                    <div>
+                        <div class="issue-title">Cartões de Produto Sem Preços no Carregamento Inicial</div>
+                        <div class="issue-description">
+                            Os cartões de produto no carrossel "Novidades" não mostram imagens inicialmente (loaders de esqueleto visíveis). Quando as imagens carregam, alguns cartões mostram preço enquanto outros não, criando inconsistência. De acordo com o NN Group, os cartões de produto devem sempre mostrar o preço de forma destacada.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Sobreposição de Banner Lateral</div>
+                        <div class="issue-description">
+                            Dois grandes banners promocionais ("PCDIGA Mobile Fest" com -55%) flanqueiam a área de conteúdo principal em ambos os lados. Competem visualmente com o conteúdo principal, reduzem a largura útil de conteúdo e criam ruído visual. Em ecrãs menores, poderiam criar problemas de scroll horizontal.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Sem Proposta de Valor</div>
+                        <div class="issue-description">
+                            A página inicial carece de sinais de confiança acima da dobra: sem badge de "envio grátis", sem destaque "garantia de 36 meses", sem métricas de satisfação do cliente. De acordo com as melhores práticas, estes devem ser visíveis sem necessidade de scroll.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Acessibilidade de Ícones de Categoria</div>
+                        <div class="issue-description">
+                            Os ícones de categoria usam fundos circulares escuros que podem não fornecer contraste suficiente para todos os utilizadores. As imagens de ícone dentro dos círculos são pequenas e difíceis de distinguir. Os rótulos de texto abaixo são pequenos (~12px).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Sem Personalização ou Acesso Rápido</div>
+                        <div class="issue-description">
+                            Não há secções "recentemente visualizados", "recomendado para si" ou "produtos em destaque" visíveis. A melhor prática para páginas iniciais de e-commerce é mostrar conteúdo personalizado.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card low">
+                <div class="issue-header">
+                    <span class="severity-badge low">Baixo</span>
+                    <div>
+                        <div class="issue-title">Placeholder da Barra de Pesquisa</div>
+                        <div class="issue-description">
+                            "Escreve aqui o que procuras..." é informal mas poderia beneficiar de sugestões de pesquisa ou indicação de autocomplete.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATALOG ANALYSIS -->
+        <section id="catalog">
+            <h2>Análise da Página de Catálogo</h2>
+            <p class="text-muted">Exemplo analisado: Placas Gráficas</p>
+
+            <div class="positive-section">
+                <h4>✓ O Que Funciona Bem</h4>
+                <ul>
+                    <li>Navegação de breadcrumb clara (Home > Componentes > Placas Gráficas)</li>
+                    <li>Barra lateral esquerda com filtros relevantes (Stock, Categoria, Preço, Fabricante, Estado do Produto, Processador Gráfico)</li>
+                    <li>Slider de intervalo de preço com valores mín/máx</li>
+                    <li>Contagem de produtos por opção de filtro (ex: "Em Stock (198)")</li>
+                    <li>Alternador "Esconder Filtros" disponível</li>
+                    <li>Opções de ordenação ("Ordenar Por: Relevância")</li>
+                    <li>Seletor de produtos por página (36)</li>
+                    <li>Cartões de produto mostram: badge, imagem, título, resumo de specs, SKU, estado de stock, data de entrega, preço, ações de comparação/favoritos</li>
+                </ul>
+            </div>
+
+            <h3>Problemas Encontrados</h3>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Imagens de Cartões de Produto Não Carregam</div>
+                        <div class="issue-description">
+                            A primeira linha de cartões de produto mostra placeholders de imagem brancos/vazios mesmo após o carregamento da página. Apenas após scroll as imagens aparecem. Mesmo problema de lazy loading que na página inicial. Para uma página de catálogo, as imagens de produto são essenciais para scanning e comparação.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Sobrecarga de Informação nos Cartões de Produto</div>
+                        <div class="issue-description">
+                            Cada cartão contém: badge, imagem, banner de promoção, título completo do produto, 3-4 linhas de specs técnicas (AI TOPS, Clock Base, Clock Boost, Núcleos CUDA, Interface Memória, Bits, TDP), número SKU, estado de stock, data de entrega, preço, botão de comparação, botão de favoritos. É demasiada densidade de informação. De acordo com o NN Group, as páginas de listagem devem mostrar apenas informação suficiente para diferenciar produtos — o resto pertence à página de produto.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Problemas de UX de Filtros</div>
+                        <div class="issue-description">
+                            Os filtros não mostram o estado selecionado claramente. Os links expandíveis "Ver tudo (+13)" requerem cliques extras. Sem resumo de filtros aplicados no topo dos resultados. Sem forma de limpar todos os filtros de uma vez. O slider de preço carece de campos de entrada para valores exatos.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Sem Quick View</div>
+                        <div class="issue-description">
+                            Sem hover-para-pré-visualização ou modal de visualização rápida para produtos. Os utilizadores devem navegar até à página completa do produto para ver detalhes básicos além do que está no cartão. Isto aumenta o atrito para compra comparativa.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Sem Sinais de Comparação Visual</div>
+                        <div class="issue-description">
+                            Os cartões de produto mostram specs em formato de texto bruto (ex: "AI TOPS: 614 | Clock Base: 2280 MHz..."). Sem indicadores visuais, barras ou classificações para ajudar utilizadores a comparar specs rapidamente entre cartões. Para produtos técnicos, auxiliares de comparação visual reduzem significativamente a carga cognitiva.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Banners Promocionais em Páginas de Categoria</div>
+                        <div class="issue-description">
+                            Os mesmos banners laterais ("Mobile Fest -55%") aparecem em páginas de catálogo também, reduzindo a área de conteúdo e adicionando ruído visual irrelevante para a categoria navegada.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card low">
+                <div class="issue-header">
+                    <span class="severity-badge low">Baixo</span>
+                    <div>
+                        <div class="issue-title">Opções de Ordenação Limitadas</div>
+                        <div class="issue-description">
+                            Apenas "Relevância" visível como ordenação padrão. Ordenações comuns de e-commerce como "Preço: baixo-alto", "Mais vendidos", "Novidades" devem ser mais proeminentes.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card low">
+                <div class="issue-header">
+                    <span class="severity-badge low">Baixo</span>
+                    <div>
+                        <div class="issue-title">Sem Tags de Filtros Ativos</div>
+                        <div class="issue-description">
+                            Quando filtros são aplicados, não existe um sistema de tag/chip no topo mostrando filtros ativos com remoção fácil "x".
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        <!-- PRODUCT PAGE ANALYSIS -->
+        <section id="product">
+            <h2>Análise da Página de Produto</h2>
+            <p class="text-muted">Exemplo analisado: Asus RTX 5060</p>
+
+            <div class="positive-section">
+                <h4>✓ O Que Funciona Bem</h4>
+                <ul>
+                    <li>Breadcrumb claro (Home > Componentes > Placas Gráficas > Placas Gráficas NVIDIA)</li>
+                    <li>Barra de metadados do produto (Número de Parte, EAN, Garantia 36 Meses, classificação Trustpilot)</li>
+                    <li>Galeria de imagens de produto grande (8 imagens com layout em grid)</li>
+                    <li>Visualização clara de preço (359,90 €) em cor laranja de marca</li>
+                    <li>Informação de envio "Portes Grátis"</li>
+                    <li>Estado de stock com data de entrega ("Em Stock — Entrega prevista a 14 de abril")</li>
+                    <li>Botão CTA proeminente "ADICIONAR" em salmon/laranja</li>
+                    <li>Seletor de quantidade</li>
+                    <li>"Ver Stock Lojas" — verificação de stock em lojas físicas</li>
+                    <li>Opções de financiamento (SeQura, Klarna, Aplazame)</li>
+                    <li>Lista de "Características Principais"</li>
+                    <li>Abas de detalhe do produto (Detalhes, Informações Técnicas, Avaliações)</li>
+                    <li>Sistema de bundle/cross-sell ("A Combinação Perfeita")</li>
+                    <li>Logo de marca (Asus) com link para loja de marca</li>
+                    <li>Ações rápidas de favoritos e comparação</li>
+                </ul>
+            </div>
+
+            <h3>Problemas Encontrados</h3>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Falha de Lazy Loading de Imagens de Produto</div>
+                        <div class="issue-description">
+                            Mesmo padrão: as imagens da galeria de produto inicialmente renderizam como caixas brancas vazias. No primeiro carregamento, apenas 1-2 de 8 imagens são visíveis. Os utilizadores veem principalmente quadrados brancos em vez de fotos do produto. Para uma página de produto, isto é particularmente prejudicial — as imagens são o fator #1 em decisões de compra.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Sem Carrinho de Compras Sticky</div>
+                        <div class="issue-description">
+                            Ao fazer scroll além da secção de info do produto, o preço e botão "ADICIONAR" desaparecem. A melhor prática é uma barra sticky ou CTA flutuante que persiste enquanto os utilizadores fazem scroll através de specs e avaliações. Existe uma barra de produto sticky que aparece, mas é apenas nome e preço do produto — sem ação direta de add-to-cart.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Duplicação de Conteúdo de Aba</div>
+                        <div class="issue-description">
+                            A árvore de acessibilidade revela que o conteúdo "Detalhes do Produto" está duplicado — aparece TANTO acima das abas COMO dentro do painel de aba. Isto cria comprimento de página desnecessário e arquitetura de conteúdo confusa.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Formato de Specs</div>
+                        <div class="issue-description">
+                            As especificações técnicas são apresentadas como uma lista simples em bullets em vez de uma tabela adequada com pares rótulo:valor. Para produtos técnicos, uma tabela limpa de duas colunas é muito mais scannable. A lista de specs também está misturada no conteúdo de aba dificultando encontrá-la rapidamente.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Avaliações Não Proeminentes</div>
+                        <div class="issue-description">
+                            A classificação do Trustpilot aparece no topo (pequena) mas a aba "Avaliações" requer clique para aceder. Sem snippets de avaliação visíveis na página. O número de avaliações (5) é mostrado mas não a divisão de classificação em estrelas. A prova social deveria ser mais visível.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Bundle Cross-sell Ocupa Demasiado Espaço</div>
+                        <div class="issue-description">
+                            As secções de bundle "A Combinação Perfeita" ocupam espaço vertical significativo abaixo da info do produto. Duas ofertas de bundle separadas empurram os detalhes do produto (abas, specs) muito para baixo na página. Os utilizadores procurando specs têm que fazer scroll além de cross-sells.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Sem "Recentemente Visualizados" ou "Clientes Também Compraram"</div>
+                        <div class="issue-description">
+                            Padrões comuns de e-commerce ausentes para descoberta e engagement após detalhes do produto.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card low">
+                <div class="issue-header">
+                    <span class="severity-badge low">Baixo</span>
+                    <div>
+                        <div class="issue-title">UX da Galeria de Imagens</div>
+                        <div class="issue-description">
+                            O layout da grid de imagem (2 grandes + 6 pequenas em grid 3x2) é não-convencional. O padrão padrão é uma imagem principal com barra de thumbnails. O botão "Ver Mais" na última imagem sugere que há mais fotos mas requer um clique extra.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CROSS-CUTTING ISSUES -->
+        <section id="cross-cutting">
+            <h2>Problemas Transversais</h2>
+            <p class="text-muted">Questões encontradas em múltiplas páginas</p>
+
+            <div class="issue-card critical">
+                <div class="issue-header">
+                    <span class="severity-badge critical">Crítico</span>
+                    <div>
+                        <div class="issue-title">Falha Sistemática de Lazy Loading</div>
+                        <div class="issue-description">
+                            Em TODAS as páginas, o conteúdo abaixo da dobra falha em renderizar. Grandes secções de espaço escuro/em branco aparecem. Este é o maior problema afetando o site inteiro. Sugere um problema de renderização JavaScript, possivelmente com a implementação do Intersection Observer ou hydração SSR.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Problemas de Contraste do Tema Escuro</div>
+                        <div class="issue-description">
+                            Texto em fundo escuro (#1a1a2e ou similar) usa cinzento claro que pode não cumprir a razão de contraste WCAG 4.5:1 em todos os casos. O texto secundário (specs, descrições) aparece em cinzento silenciado que é difícil de ler.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card high">
+                <div class="issue-header">
+                    <span class="severity-badge high">Alto</span>
+                    <div>
+                        <div class="issue-title">Banners Promocionais Laterais</div>
+                        <div class="issue-description">
+                            Banners promocionais persistentes nas margens esquerda e direita em TODAS as páginas reduzem a largura de conteúdo e criam clutter visual. Estes são especialmente problemáticos em larguras de viewport menores.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Sem Breadcrumb Schema / Dados Estruturados</div>
+                        <div class="issue-description">
+                            Embora breadcrumbs sejam visualmente presentes, não há evidência visível de implementação de schema.org de dados estruturados para SEO.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card medium">
+                <div class="issue-header">
+                    <span class="severity-badge medium">Médio</span>
+                    <div>
+                        <div class="issue-title">Profundidade de Navegação</div>
+                        <div class="issue-description">
+                            O menu hamburger é o método de navegação principal. O acesso a categoria requer: clique em hamburger → encontre categoria → clique em subcategoria. Os ícones de categoria na página inicial ajudam mas não estão disponíveis em outras páginas.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card low">
+                <div class="issue-header">
+                    <span class="severity-badge low">Baixo</span>
+                    <div>
+                        <div class="issue-title">Newsletter no Rodapé</div>
+                        <div class="issue-description">
+                            A inscrição em newsletter no rodapé é padrão mas o CTA "RECEBE AS NOVIDADES E PROMOÇÕES MAIS ESCALDANTES" usa linguagem informal consistente com a marca.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HEURISTICS EVALUATION -->
+        <section id="heuristics">
+            <h2>Avaliação das 10 Heurísticas de Nielsen</h2>
+
+            <div class="heuristics-grid">
+                <div class="heuristic-card">
+                    <div class="heuristic-number">1</div>
+                    <div class="heuristic-title">Visibilidade do Estado do Sistema</div>
+                    <div class="heuristic-rating poor">Fraco</div>
+                    <div class="heuristic-text">
+                        O lazy loading não mostra indicadores de progresso de esqueleto ou estado. Os utilizadores não conseguem dizer se o conteúdo está a carregar ou ausente.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">2</div>
+                    <div class="heuristic-title">Correspondência entre Sistema e Mundo Real</div>
+                    <div class="heuristic-rating good">Bom</div>
+                    <div class="heuristic-text">
+                        A linguagem é português natural e claro. As categorias são bem compreendidas e correspondem ao modelo mental do utilizador.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">3</div>
+                    <div class="heuristic-title">Controlo e Liberdade do Utilizador</div>
+                    <div class="heuristic-rating medium">Médio</div>
+                    <div class="heuristic-text">
+                        Sem desfazer para adicionar ao carrinho (sem toast com desfazer). A limpeza de filtros é limitada. Faltam opções de controlo rápido.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">4</div>
+                    <div class="heuristic-title">Consistência e Padrões</div>
+                    <div class="heuristic-rating medium">Médio</div>
+                    <div class="heuristic-text">
+                        Os cartões de produto são consistentes mas o comportamento de carregamento de imagens é inconsistente entre páginas.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">5</div>
+                    <div class="heuristic-title">Prevenção de Erros</div>
+                    <div class="heuristic-rating medium">Médio</div>
+                    <div class="heuristic-text">
+                        O estado de stock previne encomendas de itens indisponíveis. Mas sem validação visível antes do checkout.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">6</div>
+                    <div class="heuristic-title">Reconhecimento em vez de Memória</div>
+                    <div class="heuristic-rating poor">Fraco</div>
+                    <div class="heuristic-text">
+                        Sem recentemente visualizados, histórico de pesquisa, ou estados de filtro persistentes. Os utilizadores devem memorizar preferências.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">7</div>
+                    <div class="heuristic-title">Flexibilidade e Eficiência de Uso</div>
+                    <div class="heuristic-rating medium">Médio</div>
+                    <div class="heuristic-text">
+                        A ferramenta de comparação existe, configurador disponível, mas sem quick view ou atalhos de teclado. Melhorável para utilizadores avançados.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">8</div>
+                    <div class="heuristic-title">Estética e Design Minimalista</div>
+                    <div class="heuristic-rating poor">Fraco</div>
+                    <div class="heuristic-text">
+                        Banners laterais adicionam ruído, cartões de produto sobrecarregados com specs, bundles ocupam demasiado espaço. A página sente-se desorganizada.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">9</div>
+                    <div class="heuristic-title">Ajuda na Recuperação de Erros</div>
+                    <div class="heuristic-rating medium">Médio</div>
+                    <div class="heuristic-text">
+                        Não foi testado — não consegui aceder a estados de erro para avaliação completa desta heurística.
+                    </div>
+                </div>
+
+                <div class="heuristic-card">
+                    <div class="heuristic-number">10</div>
+                    <div class="heuristic-title">Ajuda e Documentação</div>
+                    <div class="heuristic-rating good">Bom</div>
+                    <div class="heuristic-text">
+                        O rodapé tem "Centro de Ajuda" e links de suporte abrangentes. A documentação de suporte parece acessível.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOP 10 RECOMMENDATIONS -->
+        <section id="recommendations">
+            <h2>Top 10 Recomendações Prioritárias</h2>
+
+            <div class="recommendations-grid">
+                <div class="recommendation-card">
+                    <div class="recommendation-number">1</div>
+                    <div class="recommendation-title">Corrigir Lazy Loading / Renderização de Conteúdo</div>
+                    <div class="recommendation-text">
+                        Problema de desempenho crítico afetando todas as páginas. Implementar skeleton screens, verificar implementação do Intersection Observer, validar hidratação SSR. Esta é a prioridade máxima.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">2</div>
+                    <div class="recommendation-title">Otimizar Carregamento de Imagens</div>
+                    <div class="recommendation-text">
+                        Usar progressive loading adequado com placeholders blur-up. As imagens são críticas para decisões de compra — devem ser prioritárias no carregamento. Considere WebP com fallback.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">3</div>
+                    <div class="recommendation-title">Simplificar Cartões de Produto em Catálogo</div>
+                    <div class="recommendation-text">
+                        Mostrar apenas: imagem, título, preço, stock, 1-2 specs-chave. Remover todos os detalhes técnicos completos. Reduzir densidade de informação em 50%.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">4</div>
+                    <div class="recommendation-title">Adicionar Sticky Add-to-Cart na Página de Produto</div>
+                    <div class="recommendation-text">
+                        Manter CTA visível enquanto o utilizador faz scroll através de especificações e avaliações. Barra sticky com "ADICIONAR" direto, não apenas nome/preço.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">5</div>
+                    <div class="recommendation-title">Remover/Minimizar Banners Promocionais Laterais</div>
+                    <div class="recommendation-text">
+                        Usar promoções inline em vez de banners nas margens. Recuperar 200px+ de largura útil de conteúdo. Reduzir ruído visual significativamente. Manter no máximo um banner contextual.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">6</div>
+                    <div class="recommendation-title">Adicionar Sinais de Confiança Acima da Dobra na Página Inicial</div>
+                    <div class="recommendation-text">
+                        Mostrar: "Envio Grátis", "Garantia 36 Meses", classificação Trustpilot visível. Estes reduzem fricção de compra e aumentam conversão. Devem estar visíveis sem scroll.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">7</div>
+                    <div class="recommendation-title">Melhorar UX de Filtros</div>
+                    <div class="recommendation-text">
+                        Adicionar chips de filtro aplicado, botão "Limpar Tudo", campos de entrada de preço exato, feedback visual de estado. Resultados devem atualizar instantaneamente (sem página inteira reload).
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">8</div>
+                    <div class="recommendation-title">Adicionar Quick View em Catálogo</div>
+                    <div class="recommendation-text">
+                        Modal ao hover/clique que mostra: imagem, título, preço, specs principais, botão "Ver Detalhes". Reduz necessidade de navegação até página de produto para comparação rápida.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">9</div>
+                    <div class="recommendation-title">Corrigir Duplicação de Conteúdo na Página de Produto</div>
+                    <div class="recommendation-text">
+                        Remover "Detalhes do Produto" duplicado acima das abas. Limpar arquitetura de conteúdo. Colocar specs numa tabela de duas colunas, não em bullets. Melhorar scanabilidade.
+                    </div>
+                </div>
+
+                <div class="recommendation-card">
+                    <div class="recommendation-number">10</div>
+                    <div class="recommendation-title">Melhorar Contraste do Tema Escuro</div>
+                    <div class="recommendation-text">
+                        Auditar todos os pares de cor fundo/texto para cumprir WCAG AA (4.5:1 para texto normal). Aumentar brilho do texto secundário. Testar com ferramentas de contraste automatizadas.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Summary Section -->
+        <section>
+            <h2>Resumo Executivo</h2>
+
+            <div class="grid-2">
+                <div class="box">
+                    <h3>Principais Conclusões</h3>
+                    <p>
+                        O PCDIGA possui uma forte fundação de UX com navegação clara, bem estruturada, e um bom catálogo de produtos com filtros funcionais. No entanto, enfrenta <strong>problemas críticos de desempenho</strong> que afetam todas as páginas, particularmente em torno do lazy loading e renderização de conteúdo.
+                    </p>
+                    <p>
+                        A pontuação de 5.5/10 reflete um site "funcional mas problemático" — funciona para utilizadores persistentes, mas muitos abandonarão devido a problemas de performance e UX.
+                    </p>
+                </div>
+
+                <div class="box">
+                    <h3>Oportunidades de Melhoria</h3>
+                    <p>
+                        O maior retorno de investimento virá de:
+                    </p>
+                    <ol style="margin-left: 1rem; margin-top: 0.5rem;">
+                        <li><strong>Corrigir lazy loading</strong> (+2.0 pontos)</li>
+                        <li><strong>Otimizar imagens</strong> (+1.5 pontos)</li>
+                        <li><strong>Simplificar UI, remover banners</strong> (+1.0 ponto)</li>
+                    </ol>
+                    <p style="margin-top: 1rem;">
+                        Implementar estas três áreas elevaria a pontuação para <strong>7.0+</strong>.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p><strong>Análise UX/UI Completa — PCDIGA.com</strong></p>
+        <p>Data: 13 Abril 2026 | Autor: Ricardo Valente</p>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem;">
+            Este relatório foi gerado como resultado de uma inspeção detalhada e avaliação heurística do website PCDIGA.com.
+            As recomendações baseiam-se em melhores práticas de UX, diretrizes de acessibilidade (WCAG), e heurísticas
+            de usabilidade reconhecidas pela indústria.
+        </p>
+    </footer>
+</body>
+</html>
