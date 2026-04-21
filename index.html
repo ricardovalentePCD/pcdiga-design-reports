@@ -27,6 +27,8 @@
   h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
   .subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 48px; }
   .review-list { display: flex; flex-direction: column; gap: 12px; }
+
+  /* --- Card individual (sem alterações) --- */
   .review-card {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
@@ -35,11 +37,77 @@
   }
   .review-card:hover { border-color: var(--accent); transform: translateY(-1px); }
   .review-info h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-  .review-info .meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 16px; }
+  .review-info .meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; }
   .review-info .meta .score { color: var(--green); font-weight: 700; }
   .arrow { color: var(--text-muted); font-size: 20px; transition: color .2s, transform .2s; }
   .review-card:hover .arrow { color: var(--accent); transform: translateX(3px); }
-  .empty { color: var(--text-muted); font-size: 14px; text-align: center; padding: 40px; }
+
+  /* --- Pasta / Folder --- */
+  .folder { border-radius: 10px; overflow: hidden; }
+
+  .folder-header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; cursor: pointer; color: var(--text);
+    transition: border-color .2s, transform .15s;
+    user-select: none;
+  }
+  .folder-header:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  .folder.open .folder-header {
+    border-radius: 10px 10px 0 0;
+    border-bottom-color: transparent;
+    border-color: var(--accent);
+  }
+
+  .folder-title { display: flex; align-items: center; gap: 12px; }
+  .folder-title h3 { font-size: 16px; font-weight: 600; }
+  .folder-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(249, 115, 22, 0.1); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .folder-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .folder-chevron {
+    color: var(--text-muted); font-size: 18px;
+    transition: transform .3s ease, color .2s;
+    flex-shrink: 0;
+  }
+  .folder.open .folder-chevron { transform: rotate(90deg); color: var(--accent); }
+  .folder-header:hover .folder-chevron { color: var(--accent); }
+
+  /* --- Conteúdo colapsável --- */
+  .folder-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+  .folder.open .folder-content {
+    border-color: var(--accent);
+    max-height: 600px;
+  }
+  .folder-content-inner {
+    padding: 8px 16px 16px 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  /* --- Card dentro de pasta --- */
+  .folder-content .review-card {
+    background: rgba(255,255,255,0.02);
+    border-color: var(--border);
+    padding: 16px 20px;
+    border-radius: 8px;
+  }
+  .folder-content .review-card:hover {
+    background: rgba(249, 115, 22, 0.04);
+    border-color: var(--accent);
+  }
+
   footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; }
   @media (max-width: 640px) { .wrapper { padding: 32px 16px; } }
 </style>
@@ -50,10 +118,10 @@
   <h1>Design Reviews</h1>
   <p class="subtitle">Relatórios de análise e melhoria da experiência de interface</p>
 
-
   <div class="review-list">
-    
-      <a class="review-card" href="pagina-dedicada-seguros/">
+
+    <!-- Card individual — Página dedicada seguros -->
+    <a class="review-card" href="pagina-dedicada-seguros/">
       <div class="review-info">
         <h3>Página dedicada seguros</h3>
         <div class="meta">
@@ -65,7 +133,8 @@
       <span class="arrow">&#8594;</span>
     </a>
 
-      <a class="review-card" href="conta-utilizador/">
+    <!-- Card individual — Conta utilizador -->
+    <a class="review-card" href="conta-utilizador/">
       <div class="review-info">
         <h3>Análise old design vs new design</h3>
         <div class="meta">
@@ -76,52 +145,89 @@
       <span class="arrow">&#8594;</span>
     </a>
 
-     <a class="review-card" href="analise-completa-pcdiga/">
-      <div class="review-info">
-        <h3>Análise homepage / Página catalogo e produto</h3>
-        <div class="meta">
-          <span>13 abril 2026</span>
-          <span>Análise feita com base em referências de UX</span>
+    <!-- PASTA — Análise Geral PCDIGA -->
+    <div class="folder" onclick="this.classList.toggle('open')">
+      <div class="folder-header">
+        <div>
+          <div class="folder-title">
+            <div class="folder-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.5 2.5h4.333L7.5 4.5h7a1 1 0 011 1v7a1 1 0 01-1 1h-13a1 1 0 01-1 1V3.5a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Análise Geral PCDIGA</h3>
+          </div>
+          <div class="folder-meta">2 relatórios</div>
+        </div>
+        <span class="folder-chevron">&#9656;</span>
+      </div>
+      <div class="folder-content">
+        <div class="folder-content-inner">
+          <a class="review-card" href="analise-completa-pcdiga/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Análise homepage / Página catalogo e produto</h3>
+              <div class="meta">
+                <span>13 abril 2026</span>
+                <span>Análise feita com base em referências de UX</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
+          <a class="review-card" href="pcdiga-ux-audit/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Relatório auditoria UX e análise competitiva</h3>
+              <div class="meta">
+                <span>10 abril 2026</span>
+                <span>Concorrentes analisados: Amazon / Worten / PCcomponentes</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
         </div>
       </div>
-      <span class="arrow">&#8594;</span>
-    </a>
-    
-     <a class="review-card" href="pcdiga-ux-audit/">
-      <div class="review-info">
-        <h3>Relatório auditoria UX  e análise competitiva</h3>
-        <div class="meta">
-          <span>10 abril 2026</span>
-          <span>Concorrentes analisados: Amazon / Worten / PCcomponentes</span>
-        </div>
-      </div>
-      <span class="arrow">&#8594;</span>
-    </a>
+    </div>
 
-     <a class="review-card" href="configurador-apple-v2/">
-      <div class="review-info">
-        <h3>Configurador Apple - PCDIGA V2</h3>
-        <div class="meta">
-          <span>9 abril 2026</span>
-          <span class="score">8/10</span>
-          <span>4 ecrãs analisados</span>
+    <!-- PASTA — Configurador Apple -->
+    <div class="folder" onclick="this.classList.toggle('open')">
+      <div class="folder-header">
+        <div>
+          <div class="folder-title">
+            <div class="folder-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.5 2.5h4.333L7.5 4.5h7a1 1 0 011 1v7a1 1 0 01-1 1h-13a1 1 0 01-1 1V3.5a1 1 0 011-1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3>Configurador Apple</h3>
+          </div>
+          <div class="folder-meta">2 relatórios</div>
+        </div>
+        <span class="folder-chevron">&#9656;</span>
+      </div>
+      <div class="folder-content">
+        <div class="folder-content-inner">
+          <a class="review-card" href="configurador-apple-v2/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Configurador Apple - PCDIGA V2</h3>
+              <div class="meta">
+                <span>9 abril 2026</span>
+                <span class="score">8/10</span>
+                <span>4 ecrãs analisados</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
+          <a class="review-card" href="configurador-apple/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Configurador Apple - PCDIGA V1</h3>
+              <div class="meta">
+                <span>8 abril 2026</span>
+                <span class="score">7/10</span>
+                <span>4 ecrãs analisados</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
         </div>
       </div>
-      <span class="arrow">&#8594;</span>
-    </a>
+    </div>
 
-      <a class="review-card" href="configurador-apple/">
-      <div class="review-info">
-        <h3>Configurador Apple - PCDIGA V1</h3>
-        <div class="meta">
-          <span>8 abril 2026</span>
-          <span class="score">7/10</span>
-          <span>4 ecrãs analisados</span>
-        </div>
-      </div>
-      <span class="arrow">&#8594;</span>
-    </a>
-
+    <!-- Card individual — Página de Produto Tabs -->
     <a class="review-card" href="pagina-produto-tabs/">
       <div class="review-info">
         <h3>Página de Produto — Alterações Tabs</h3>
@@ -134,14 +240,9 @@
       <span class="arrow">&#8594;</span>
     </a>
 
-   
-
-
   </div>
-
 
   <footer>PCDIGA Design Team &middot; Powered by GitHub Pages</footer>
 </div>
 </body>
 </html>
-
