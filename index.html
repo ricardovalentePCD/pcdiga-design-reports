@@ -28,7 +28,7 @@
   .subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 48px; }
   .review-list { display: flex; flex-direction: column; gap: 12px; }
 
-  /* --- Card individual (sem alterações) --- */
+  /* --- Card individual --- */
   .review-card {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
@@ -43,7 +43,7 @@
   .review-card:hover .arrow { color: var(--accent); transform: translateX(3px); }
 
   /* --- Pasta / Folder --- */
-  .folder { border-radius: 10px; overflow: hidden; }
+  .folder { border-radius: 10px; }
 
   .folder-header {
     display: flex; justify-content: space-between; align-items: center;
@@ -89,10 +89,10 @@
   }
   .folder.open .folder-content {
     border-color: var(--accent);
-    max-height: 600px;
+    max-height: 2000px; /* valor alto para nunca cortar conteúdo */
   }
   .folder-content-inner {
-    padding: 8px 16px 16px 16px;
+    padding: 12px 16px 16px 16px;
     display: flex; flex-direction: column; gap: 8px;
   }
 
@@ -106,6 +106,7 @@
   .folder-content .review-card:hover {
     background: rgba(249, 115, 22, 0.04);
     border-color: var(--accent);
+    transform: none;
   }
 
   footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; }
@@ -118,11 +119,9 @@
   <h1>Design Reviews</h1>
   <p class="subtitle">Relatórios de análise e melhoria da experiência de interface</p>
 
-
-  
   <div class="review-list">
 
-       <!-- PASTA — Página dedicada homepage mobiel -->
+    <!-- PASTA — Homepage Mobile -->
     <div class="folder" onclick="this.classList.toggle('open')">
       <div class="folder-header">
         <div>
@@ -136,28 +135,25 @@
         </div>
         <span class="folder-chevron">&#9656;</span>
       </div>
-
-       <div class="folder-content">
+      <div class="folder-content">
         <div class="folder-content-inner">
-             <a class="review-card" href="homepage-mobile-ux/">
-      <div class="review-info">
-        <h3>Alterações design homepage mobile</h3>
-        <div class="meta">
-          <span>05 Maio 2026</span>
-          <span class="score">7/10</span>
-          <span>Análise feita ao implementado vs novo design V1 e V2</span>
+          <a class="review-card" href="homepage-mobile-ux/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Alterações design homepage mobile</h3>
+              <div class="meta">
+                <span>05 Maio 2026</span>
+                <span class="score">7/10</span>
+                <span>Análise feita ao implementado vs novo design V1 e V2</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
         </div>
       </div>
-      <span class="arrow">&#8594;</span>
-    </a>
-           </div>
-          </div>
-      
+    </div>
+    <!-- /PASTA Homepage Mobile -->
 
-
-
-
-     <!-- PASTA — Página dedicada seguros -->
+    <!-- PASTA — Página dedicada seguros -->
     <div class="folder" onclick="this.classList.toggle('open')">
       <div class="folder-header">
         <div>
@@ -171,47 +167,45 @@
         </div>
         <span class="folder-chevron">&#9656;</span>
       </div>
-      
       <div class="folder-content">
         <div class="folder-content-inner">
-             <a class="review-card" href="pagina-dedicada-seguros/">
-      <div class="review-info">
-        <h3>Página dedicada seguros</h3>
-        <div class="meta">
-          <span>20 abril 2026</span>
-          <span class="score">7/10</span>
-          <span>Análise feita ao implementado vs novo design</span>
-        </div>
-      </div>
-      <span class="arrow">&#8594;</span>
-    </a>
-         <a class="review-card" href="pagina-dedicada-segurosV2/">
-      <div class="review-info">
-        <h3>Página dedicada seguros</h3>
-        <div class="meta">
-          <span>20 abril 2026</span>
-          <span class="score">8/10</span>
-          <span>Melhorias feitas com base em V1</span>
-        </div>
-      </div>
-      <span class="arrow">&#8594;</span>
-    </a>
-          <a class="review-card" href="pagina-dedicada-segurosV3/">
-      <div class="review-info">
-        <h3>Página dedicada seguros</h3>
-        <div class="meta">
-          <span>21 abril 2026</span>
-          <span class="score">9/10</span>
-          <span>Alterações feitas ao design V2</span>
-        </div>
-      </div>
-      <span class="arrow">&#8594;</span>
-    </a>
+          <a class="review-card" href="pagina-dedicada-seguros/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Página dedicada seguros</h3>
+              <div class="meta">
+                <span>20 abril 2026</span>
+                <span class="score">7/10</span>
+                <span>Análise feita ao implementado vs novo design</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
+          <a class="review-card" href="pagina-dedicada-segurosV2/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Página dedicada seguros — V2</h3>
+              <div class="meta">
+                <span>20 abril 2026</span>
+                <span class="score">8/10</span>
+                <span>Melhorias feitas com base em V1</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
+          <a class="review-card" href="pagina-dedicada-segurosV3/" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Página dedicada seguros — V3</h3>
+              <div class="meta">
+                <span>21 abril 2026</span>
+                <span class="score">9/10</span>
+                <span>Alterações feitas ao design V2</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
         </div>
       </div>
     </div>
-
-  
+    <!-- /PASTA Página dedicada seguros -->
 
     <!-- Card individual — Conta utilizador -->
     <a class="review-card" href="conta-utilizador/">
@@ -243,7 +237,7 @@
         <div class="folder-content-inner">
           <a class="review-card" href="analise-completa-pcdiga/" onclick="event.stopPropagation()">
             <div class="review-info">
-              <h3>Análise homepage / Página catalogo e produto</h3>
+              <h3>Análise homepage / Página catálogo e produto</h3>
               <div class="meta">
                 <span>13 abril 2026</span>
                 <span>Análise feita com base em referências de UX</span>
@@ -264,6 +258,7 @@
         </div>
       </div>
     </div>
+    <!-- /PASTA Análise Geral PCDIGA -->
 
     <!-- PASTA — Configurador Apple -->
     <div class="folder" onclick="this.classList.toggle('open')">
@@ -283,7 +278,7 @@
         <div class="folder-content-inner">
           <a class="review-card" href="configurador-apple-v2/" onclick="event.stopPropagation()">
             <div class="review-info">
-              <h3>Configurador Apple - PCDIGA V2</h3>
+              <h3>Configurador Apple — PCDIGA V2</h3>
               <div class="meta">
                 <span>9 abril 2026</span>
                 <span class="score">8/10</span>
@@ -294,7 +289,7 @@
           </a>
           <a class="review-card" href="configurador-apple/" onclick="event.stopPropagation()">
             <div class="review-info">
-              <h3>Configurador Apple - PCDIGA V1</h3>
+              <h3>Configurador Apple — PCDIGA V1</h3>
               <div class="meta">
                 <span>8 abril 2026</span>
                 <span class="score">7/10</span>
@@ -306,6 +301,7 @@
         </div>
       </div>
     </div>
+    <!-- /PASTA Configurador Apple -->
 
     <!-- Card individual — Página de Produto Tabs -->
     <a class="review-card" href="pagina-produto-tabs/">
