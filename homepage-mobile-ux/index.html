@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCDIGA · Homepage Mobile — Live vs V1 vs V2</title>
+<style>
+  :root {
+    --bg: #0e1117; --surface: #161b27; --surface2: #1e2535; --border: #2a3347;
+    --text: #e8ecf4; --muted: #7f8ea3; --accent: #f97316;
+    --blue: #3b82f6; --green: #22c55e; --yellow: #eab308; --red: #ef4444; --purple: #a855f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* HEADER */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 26px 0; }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+  .logo-badge { background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; padding: 6px 12px; border-radius: 6px; }
+  .skill-badge { background: rgba(168,85,247,.15); color: #c084fc; border: 1px solid rgba(168,85,247,.3); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+  .header h1 { font-size: 19px; font-weight: 700; }
+  .header-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .meta-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--muted); }
+
+  /* SECTIONS */
+  .section { padding: 44px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  p { color: #b0bccf; margin-bottom: 10px; }
+
+  /* SCORES */
+  .scores-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 12px; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+  .score-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .score-value { font-size: 32px; font-weight: 800; line-height: 1; }
+  .score-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .col-red    { color: #f87171; }
+  .col-blue   { color: #60a5fa; }
+  .col-green  { color: var(--green); }
+  .col-orange { color: var(--accent); }
+  .col-yellow { color: var(--yellow); }
+
+  /* EVOLUTION TRACK */
+  .evo-wrap { display: flex; align-items: center; gap: 0; margin: 24px 0 0; }
+  .evo-node { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; flex: 1; text-align: center; }
+  .evo-node.live { border-color: rgba(127,142,163,.4); }
+  .evo-node.v1   { border-color: rgba(96,165,250,.4); }
+  .evo-node.v2   { border-color: rgba(34,197,94,.4); }
+  .evo-arrow { color: var(--muted); font-size: 22px; padding: 0 10px; flex-shrink: 0; }
+  .evo-score { font-size: 30px; font-weight: 800; line-height: 1; }
+  .evo-node.live .evo-score { color: #f87171; }
+  .evo-node.v1   .evo-score { color: #60a5fa; }
+  .evo-node.v2   .evo-score { color: #22c55e; }
+  .evo-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 4px; }
+  .evo-delta { font-size: 11px; font-weight: 700; margin-top: 6px; }
+  .evo-node.v1 .evo-delta { color: #60a5fa; }
+  .evo-node.v2 .evo-delta { color: #22c55e; }
+
+  /* PHONES */
+  .phones-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media(max-width:900px){ .phones-grid { grid-template-columns: 1fr 1fr; } }
+  @media(max-width:560px){ .phones-grid { grid-template-columns: 1fr; } }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .phone-label-row { display: flex; align-items: center; gap: 8px; }
+  .vdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .vdot-live { background: var(--muted); }
+  .vdot-v1   { background: #60a5fa; }
+  .vdot-v2   { background: var(--green); }
+  .phone-label-text { font-size: 14px; font-weight: 700; }
+  .phone-frame { background: #090909; border: 2px solid #252525; border-radius: 24px; overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+  .phone-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; width: 100%; }
+  .ps-live { border-color: rgba(127,142,163,.3); }
+  .ps-v1   { border-color: rgba(96,165,250,.3); }
+  .ps-v2   { border-color: rgba(34,197,94,.3); }
+  .phone-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 7px; }
+  .ps-live .phone-summary-title { color: var(--muted); }
+  .ps-v1   .phone-summary-title { color: #60a5fa; }
+  .ps-v2   .phone-summary-title { color: var(--green); }
+  .phone-summary li { list-style: none; font-size: 11.5px; color: var(--muted); padding: 3px 0; line-height: 1.5; }
+
+  /* ISSUES */
+  .issue { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; display: flex; gap: 14px; }
+  .issue-badge { flex-shrink: 0; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; height: fit-content; white-space: nowrap; }
+  .badge-critical { background: rgba(239,68,68,.15);  color: #ef4444; border: 1px solid rgba(239,68,68,.3); }
+  .badge-high     { background: rgba(249,115,22,.15); color: #fb923c; border: 1px solid rgba(249,115,22,.3); }
+  .badge-medium   { background: rgba(234,179,8,.15);  color: #eab308; border: 1px solid rgba(234,179,8,.3); }
+  .badge-low      { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+  .badge-positive { background: rgba(34,197,94,.15);  color: #22c55e; border: 1px solid rgba(34,197,94,.3); }
+  .issue-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  .issue-body  { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+  .issue-fix   { margin-top: 9px; padding: 9px 13px; background: var(--surface2); border-radius: 7px; font-size: 12px; color: #93c5fd; border-left: 3px solid var(--blue); }
+  .ux-rule     { margin-top: 7px; font-size: 11px; color: #c084fc; background: rgba(168,85,247,.06); border: 1px solid rgba(168,85,247,.15); border-radius: 6px; padding: 4px 10px; display: inline-block; }
+
+  /* TABLE */
+  .vtable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .vtable th { background: var(--surface2); padding: 10px 14px; border: 1px solid var(--border); text-align: left; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .vtable td { padding: 10px 14px; border: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+  .vtable tr:nth-child(even) td { background: rgba(255,255,255,.015); }
+  .zone-name { font-weight: 600; color: var(--text); font-size: 12.5px; }
+  .cell-bad  { color: #f87171; font-size: 12.5px; }
+  .cell-ok   { color: #fbbf24; font-size: 12.5px; }
+  .cell-good { color: #4ade80; font-size: 12.5px; }
+  .chip { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 10px; white-space: nowrap; display: inline-block; margin: 1px 0; }
+  .chip-bad  { background: rgba(239,68,68,.12);  color: #ef4444; }
+  .chip-ok   { background: rgba(234,179,8,.12);  color: #eab308; }
+  .chip-good { background: rgba(34,197,94,.12);  color: #22c55e; }
+
+  /* VERDICT */
+  .verdict { background: linear-gradient(135deg, rgba(249,115,22,.07), rgba(34,197,94,.05)); border: 1px solid rgba(249,115,22,.28); border-radius: 14px; padding: 26px 30px; }
+  .verdict-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--accent); }
+
+  .priority-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin-top: 18px; }
+  .priority-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .priority-card.p1 { border-left: 3px solid var(--green); }
+  .priority-card.p2 { border-left: 3px solid var(--accent); }
+  .priority-card.p3 { border-left: 3px solid var(--blue); }
+  .priority-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+  .priority-item { font-size: 12.5px; color: var(--text); padding: 2px 0; }
+
+  .nav-pills { display: flex; gap: 7px; flex-wrap: wrap; padding: 18px 0 4px; }
+  .nav-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 6px 13px; font-size: 12px; color: var(--muted); text-decoration: none; }
+
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="logo-badge">PCDIGA</span>
+        <div>
+          <h1>Homepage Mobile — Live · Design V1 · Design V2</h1>
+          <div class="header-sub">Comparação completa 3 versões · Banner · Categorias · Campaign Block</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+        <span class="skill-badge">✦ UX Pro Max</span>
+        <span class="meta-pill">📅 Maio 2026</span>
+        <span class="meta-pill">📱 3 versões</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="container">
+  <div class="nav-pills">
+    <a href="#evolucao"   class="nav-pill">📈 Evolução</a>
+    <a href="#visual"     class="nav-pill">📱 3 versões</a>
+    <a href="#zonas"      class="nav-pill">📋 Análise zona a zona</a>
+    <a href="#uxpromax"   class="nav-pill">✦ UX Pro Max</a>
+    <a href="#issues"     class="nav-pill">⚠ Issues</a>
+    <a href="#veredicto"  class="nav-pill">🏁 Veredicto</a>
+  </div>
+</div>
+
+<!-- ═══════════════════ EVOLUÇÃO ═══════════════════ -->
+<section class="section" id="evolucao">
+  <div class="container">
+    <div class="section-title">Evolução das 3 versões</div>
+
+    <div class="evo-wrap">
+      <div class="evo-node live">
+        <div class="evo-score">5.0</div>
+        <div class="evo-label">Live — atual</div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-node v1">
+        <div class="evo-score">7.0</div>
+        <div class="evo-label">Design V1</div>
+        <div class="evo-delta">↑ +2.0 pts</div>
+      </div>
+      <div class="evo-arrow">→</div>
+      <div class="evo-node v2">
+        <div class="evo-score">8.5</div>
+        <div class="evo-label">Design V2</div>
+        <div class="evo-delta">↑ +1.5 pts</div>
+      </div>
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="scores-grid">
+        <div class="score-card">
+          <div class="score-label">Banner — altura</div>
+          <div class="score-value col-red">~172<span style="font-size:15px">px</span></div>
+          <div class="score-sub">Live → ~106px V1/V2</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Categorias — altura</div>
+          <div class="score-value col-red">~106<span style="font-size:15px">px</span></div>
+          <div class="score-sub">Live → ~34px V1/V2</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Ganho above-fold</div>
+          <div class="score-value col-green">+138<span style="font-size:15px">px</span></div>
+          <div class="score-sub">A partir de V1</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Produtos visíveis</div>
+          <div class="score-value col-orange">1→2</div>
+          <div class="score-sub">Live=1 · V1=2 · V2=2</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Identidade campanha</div>
+          <div class="score-value col-red">Live</div>
+          <div class="score-sub">V1 fraca → V2 forte</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Novidade V2</div>
+          <div class="score-value col-green">🟧</div>
+          <div class="score-sub">Fundo laranja no bloco</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 3 PHONES ═══════════════════ -->
+<section class="section" id="visual">
+  <div class="container">
+    <div class="section-title">Comparação visual — Live · V1 · V2</div>
+    <div class="phones-grid">
+
+      <!-- ══ LIVE ══ -->
+      <div class="phone-col">
+        <div class="phone-label-row">
+          <span class="vdot vdot-live"></span>
+          <span class="phone-label-text">Live — atual</span>
+        </div>
+        <div class="phone-frame">
+          <svg width="252" viewBox="0 0 252 700" xmlns="http://www.w3.org/2000/svg">
+            <rect width="252" height="700" fill="#111"/>
+            <!-- header -->
+            <rect x="0" y="0" width="252" height="40" fill="#0c0c0c"/>
+            <text x="10" y="25" font-size="13" fill="#f97316" font-weight="800">PCDIGA</text>
+            <text x="10" y="25" font-size="13" fill="#f97316" font-weight="800">PC</text>
+            <text x="28" y="25" font-size="13" fill="#fff" font-weight="800">DIG@</text>
+            <circle cx="176" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="196" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="216" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="236" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <!-- search -->
+            <rect x="6" y="46" width="240" height="26" rx="5" fill="#1e1e1e" stroke="#2a2a2a" stroke-width="1"/>
+            <text x="18" y="63" font-size="8" fill="#555">🔍 Escreve aqui o que procuras...</text>
+
+            <!-- BANNER GRANDE — problema -->
+            <rect x="0" y="78" width="4" height="168" fill="#ef4444"/>
+            <rect x="4" y="78" width="248" height="168" fill="#f97316"/>
+            <rect x="164" y="84" width="84" height="156" rx="3" fill="rgba(0,0,0,.12)"/>
+            <text x="206" y="164" font-size="7" fill="rgba(255,255,255,.2)" text-anchor="middle">[ arte ]</text>
+            <text x="12" y="98"  font-size="8"  fill="rgba(255,255,255,.55)" font-weight="600">DIAS PCDIGUIANOS</text>
+            <text x="12" y="115" font-size="12" fill="#fff" font-weight="800">GRANDES DIAS,</text>
+            <text x="12" y="130" font-size="12" fill="#fff" font-weight="800">PREÇOS PEQUENOS</text>
+            <text x="12" y="145" font-size="8"  fill="rgba(255,255,255,.7)">[24ABR_06MAI]</text>
+            <rect x="12" y="208" width="100" height="22" rx="4" fill="rgba(0,0,0,.35)"/>
+            <text x="62" y="223" font-size="8" fill="#fff" font-weight="700" text-anchor="middle">VER CAMPANHA ://</text>
+            <text x="246" y="162" font-size="7" fill="#ef4444" text-anchor="end" transform="rotate(-90 246 162)">~168px ✗</text>
+
+            <!-- CATEGORIES CÍRCULOS GRANDES -->
+            <rect x="0" y="250" width="4" height="106" fill="#ef4444"/>
+            <rect x="4" y="250" width="248" height="106" fill="#141414"/>
+            <circle cx="54"  cy="290" r="34" fill="#222" stroke="#2a2a2a" stroke-width="1.5"/>
+            <circle cx="140" cy="290" r="34" fill="#222" stroke="#2a2a2a" stroke-width="1.5"/>
+            <clipPath id="cc3"><rect x="0" y="250" width="252" height="106"/></clipPath>
+            <circle cx="226" cy="290" r="34" fill="#222" stroke="#2a2a2a" stroke-width="1.5" clip-path="url(#cc3)"/>
+            <text x="54"  y="332" font-size="6.5" fill="#aaa" text-anchor="middle">Gaming PCs</text>
+            <text x="140" y="332" font-size="6.5" fill="#aaa" text-anchor="middle">Laptops</text>
+            <text x="236" y="332" font-size="6.5" fill="#888">Smartph…</text>
+            <text x="246" y="303" font-size="7" fill="#ef4444" text-anchor="end" transform="rotate(-90 246 303)">~106px ✗</text>
+
+            <!-- section header -->
+            <rect x="0" y="360" width="252" height="32" fill="#0c0c0c"/>
+            <rect x="6" y="367" width="3" height="18" rx="1.5" fill="#f97316"/>
+            <text x="14" y="381" font-size="9.5" fill="#fff" font-weight="700">Dias Pcdiguianos</text>
+            <rect x="170" y="365" width="76" height="20" rx="4" fill="#111" stroke="#222"/>
+            <text x="208" y="379" font-size="8" fill="#888" text-anchor="middle">VER MAIS</text>
+
+            <!-- CAMPAIGN BLOCK LIVE — 1 product, large card -->
+            <rect x="0" y="396" width="252" height="296" fill="#111"/>
+            <!-- large campaign card -->
+            <rect x="6" y="400" width="136" height="284" rx="5" fill="#f97316"/>
+            <rect x="13" y="408" width="30" height="26" rx="3" fill="rgba(0,0,0,.32)"/>
+            <text x="28" y="426" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">57</text>
+            <rect x="47" y="408" width="30" height="26" rx="3" fill="rgba(0,0,0,.32)"/>
+            <text x="62" y="426" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">20</text>
+            <rect x="81" y="408" width="30" height="26" rx="3" fill="rgba(0,0,0,.32)"/>
+            <text x="96" y="426" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">25</text>
+            <text x="28" y="441" font-size="5.5" fill="rgba(255,255,255,.6)" text-anchor="middle">h</text>
+            <text x="62" y="441" font-size="5.5" fill="rgba(255,255,255,.6)" text-anchor="middle">m</text>
+            <text x="96" y="441" font-size="5.5" fill="rgba(255,255,255,.6)" text-anchor="middle">s</text>
+            <text x="74" y="460" font-size="7.5" fill="rgba(255,255,255,.55)" text-anchor="middle">PCDIGUIANOS</text>
+            <text x="74" y="474" font-size="9.5" fill="#fff" font-weight="800" text-anchor="middle">GRANDES DIAS,</text>
+            <text x="74" y="488" font-size="9.5" fill="#fff" font-weight="800" text-anchor="middle">PREÇOS PEQUENOS</text>
+            <rect x="13" y="496" width="120" height="120" rx="3" fill="rgba(0,0,0,.15)"/>
+            <text x="73" y="559" font-size="7.5" fill="rgba(255,255,255,.18)" text-anchor="middle">[ arte campanha ]</text>
+            <rect x="13" y="624" width="120" height="24" rx="4" fill="rgba(0,0,0,.38)"/>
+            <text x="73" y="640" font-size="8.5" fill="#fff" font-weight="700" text-anchor="middle">VER CAMPANHA</text>
+            <!-- 1 product card only -->
+            <rect x="148" y="400" width="98" height="284" rx="5" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <rect x="152" y="404" width="60" height="13" rx="3" fill="#f97316"/>
+            <text x="182" y="414" font-size="6.5" fill="#fff" font-weight="700" text-anchor="middle">PCDIGUIANOS</text>
+            <rect x="152" y="420" width="90" height="66" rx="3" fill="#2a2a2a"/>
+            <text x="197" y="456" font-size="7.5" fill="#3a3a3a" text-anchor="middle">[ produto ]</text>
+            <text x="197" y="500" font-size="7" fill="#ddd" text-anchor="middle">Rato Óptico Logit</text>
+            <text x="197" y="511" font-size="7" fill="#ddd" text-anchor="middle">Bluetooth Edition</text>
+            <text x="197" y="522" font-size="5.5" fill="#555" text-anchor="middle">910-007501</text>
+            <text x="197" y="534" font-size="6" fill="#22c55e" text-anchor="middle">● Em Stock</text>
+            <text x="197" y="550" font-size="11" fill="#f97316" font-weight="800" text-anchor="middle">79,90 €</text>
+            <!-- annotations -->
+            <rect x="0" y="688" width="252" height="12" fill="rgba(239,68,68,.2)"/>
+            <text x="126" y="698" font-size="7" fill="#ef4444" text-anchor="middle" font-weight="600">só 1 produto visível</text>
+          </svg>
+        </div>
+        <div class="phone-summary ps-live">
+          <div class="phone-summary-title">Live — Problemas</div>
+          <ul>
+            <li>🔴 Banner ~168px — 30% do ecrã</li>
+            <li>🔴 Categorias círculos ~106px</li>
+            <li>🔴 288px overhead antes de produto</li>
+            <li>🔴 Só 1 produto no campaign block</li>
+            <li>🔴 Counter enterrado no card laranja</li>
+            <li>🔴 Identidade campanha: card pesado</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ══ V1 ══ -->
+      <div class="phone-col">
+        <div class="phone-label-row">
+          <span class="vdot vdot-v1"></span>
+          <span class="phone-label-text">Design V1</span>
+        </div>
+        <div class="phone-frame">
+          <svg width="252" viewBox="0 0 252 700" xmlns="http://www.w3.org/2000/svg">
+            <rect width="252" height="700" fill="#111"/>
+            <!-- header -->
+            <rect x="0" y="0" width="252" height="40" fill="#0c0c0c"/>
+            <text x="10" y="25" font-size="13" fill="#f97316" font-weight="800">PC</text>
+            <text x="28" y="25" font-size="13" fill="#fff" font-weight="800">DIG@</text>
+            <rect x="154" y="13" width="30" height="14" rx="7" fill="#2a2a2a" stroke="#3a3a3a"/>
+            <circle cx="174" cy="20" r="5.5" fill="#eab308"/>
+            <circle cx="193" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="213" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="233" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <!-- search -->
+            <rect x="6" y="46" width="240" height="26" rx="5" fill="#1e1e1e" stroke="#2a2a2a" stroke-width="1"/>
+            <text x="18" y="63" font-size="8" fill="#555">🔍 Pesquise o seu produto aqui...</text>
+
+            <!-- BANNER COMPACTO -->
+            <rect x="0" y="78" width="4" height="104" fill="#22c55e"/>
+            <rect x="4" y="78" width="248" height="104" fill="#f97316"/>
+            <rect x="162" y="84" width="86" height="92" rx="3" fill="rgba(0,0,0,.12)"/>
+            <text x="205" y="132" font-size="7" fill="rgba(255,255,255,.2)" text-anchor="middle">[ arte ]</text>
+            <text x="12" y="96"  font-size="8"  fill="rgba(255,255,255,.55)" font-weight="600">DIAS PCDIGUIANOS</text>
+            <text x="12" y="112" font-size="12" fill="#fff" font-weight="800">GRANDES DIAS,</text>
+            <text x="12" y="127" font-size="12" fill="#fff" font-weight="800">PREÇOS PEQUENOS</text>
+            <text x="12" y="142" font-size="8"  fill="rgba(255,255,255,.7)">[24ABR_06MAI]</text>
+            <text x="246" y="130" font-size="7" fill="#22c55e" text-anchor="end" transform="rotate(-90 246 130)">~104px ✓</text>
+
+            <!-- CHIPS -->
+            <rect x="0" y="186" width="4" height="34" fill="#22c55e"/>
+            <rect x="4" y="186" width="248" height="34" fill="#141414"/>
+            <rect x="6"   y="192" width="104" height="22" rx="11" fill="#222" stroke="#2e2e2e"/>
+            <circle cx="18" cy="203" r="7" fill="#2e2e2e"/>
+            <text x="30" y="207" font-size="7" fill="#ccc">Comp. PCDIGA Gaming</text>
+            <rect x="114" y="192" width="86" height="22" rx="11" fill="#222" stroke="#2e2e2e"/>
+            <circle cx="126" cy="203" r="7" fill="#2e2e2e"/>
+            <text x="138" y="207" font-size="7" fill="#ccc">Comp. Laptop</text>
+            <rect x="204" y="192" width="42" height="22" rx="11" fill="#222" stroke="#2e2e2e"/>
+            <defs>
+              <linearGradient id="gfV1" x1="55%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#141414" stop-opacity="0"/>
+                <stop offset="100%" stop-color="#141414" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <rect x="202" y="186" width="50" height="34" fill="url(#gfV1)"/>
+            <text x="246" y="203" font-size="7" fill="#22c55e" text-anchor="end" transform="rotate(-90 246 203)">~34px ✓</text>
+
+            <!-- SECTION HEADER — dark bg (issue) -->
+            <rect x="0" y="224" width="252" height="34" fill="#0c0c0c"/>
+            <rect x="6" y="231" width="3" height="20" rx="1.5" fill="#f97316"/>
+            <text x="14" y="245" font-size="10" fill="#fff" font-weight="700">DIAS PCDIGUIANOS</text>
+            <rect x="172" y="229" width="74" height="20" rx="4" fill="#111" stroke="#222"/>
+            <text x="209" y="243" font-size="8" fill="#888" text-anchor="middle">VER MAIS</text>
+            <!-- red mark: dark bg -->
+            <rect x="0" y="224" width="4" height="34" fill="#ef4444" opacity="0.5"/>
+
+            <!-- COUNTER STRIP — dark neutral (issue) -->
+            <rect x="0" y="262" width="252" height="48" fill="#151515"/>
+            <rect x="0" y="262" width="252" height="48" fill="#f97316" opacity="0.07"/>
+            <rect x="0" y="262" width="4" height="48" fill="#ef4444" opacity="0.5"/>
+            <rect x="8"  y="270" width="32" height="26" rx="4" fill="#1e1e1e" stroke="#f97316" stroke-width="1"/>
+            <text x="24" y="288" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">37</text>
+            <text x="24" y="302" font-size="5.5" fill="#888" text-anchor="middle">horas</text>
+            <rect x="46" y="270" width="32" height="26" rx="4" fill="#1e1e1e" stroke="#f97316" stroke-width="1"/>
+            <text x="62" y="288" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">05</text>
+            <text x="62" y="302" font-size="5.5" fill="#888" text-anchor="middle">min</text>
+            <rect x="84" y="270" width="32" height="26" rx="4" fill="#1e1e1e" stroke="#f97316" stroke-width="1"/>
+            <text x="100" y="288" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">42</text>
+            <text x="100" y="302" font-size="5.5" fill="#888" text-anchor="middle">seg</text>
+            <rect x="126" y="268" width="120" height="34" rx="5" fill="#f97316"/>
+            <text x="186" y="289" font-size="9.5" fill="#fff" font-weight="800" text-anchor="middle">VER CAMPANHA</text>
+
+            <!-- annotation -->
+            <rect x="0" y="312" width="252" height="12" fill="rgba(239,68,68,.15)"/>
+            <text x="126" y="322" font-size="7" fill="#ef4444" text-anchor="middle" font-weight="600">fundo escuro neutro — identidade fraca</text>
+
+            <!-- 2 PRODUCT CARDS (white) -->
+            <rect x="0" y="328" width="252" height="368" fill="#111"/>
+            <rect x="4"   y="332" width="118" height="198" rx="5" fill="#fff"/>
+            <rect x="8"   y="336" width="62"  height="13"  rx="3" fill="#f97316"/>
+            <text x="39"  y="347" font-size="6.5" fill="#fff" font-weight="700" text-anchor="middle">PCDIGUIANOS</text>
+            <rect x="8"   y="354" width="110" height="78"  rx="3" fill="#f0f0f0"/>
+            <text x="63" y="395" font-size="7.5" fill="#ccc" text-anchor="middle">[ produto ]</text>
+            <text x="8"   y="445" font-size="7.5" fill="#1a1a1a" font-weight="600">Projetor LG HU85LS</text>
+            <text x="8"   y="457" font-size="7.5" fill="#1a1a1a" font-weight="600">CineBeam Laser 4K...</text>
+            <text x="8"   y="469" font-size="6.5" fill="#888">Cinema em casa de tirar...</text>
+            <rect x="8"   y="474" width="104" height="10" rx="2" fill="rgba(234,179,8,.2)"/>
+            <text x="8"   y="483" font-size="6.5" fill="#d97706">82KU01YQPG ← issue</text>
+            <text x="8"   y="496" font-size="6.5" fill="#22c55e">● Em stock  Entrega 10 Jan</text>
+            <text x="8"   y="514" font-size="12" fill="#f97316" font-weight="800">599,90 €</text>
+
+            <rect x="130" y="332" width="118" height="198" rx="5" fill="#fff"/>
+            <rect x="134" y="336" width="62"  height="13"  rx="3" fill="#f97316"/>
+            <rect x="134" y="354" width="110" height="78"  rx="3" fill="#f0f0f0"/>
+            <text x="189" y="395" font-size="7.5" fill="#ccc" text-anchor="middle">[ produto ]</text>
+            <text x="134" y="445" font-size="7.5" fill="#1a1a1a" font-weight="600">Projetor LG HU85LS</text>
+            <text x="134" y="457" font-size="7.5" fill="#1a1a1a">CineBeam Laser 4K...</text>
+            <rect x="134" y="474" width="104" height="10" rx="2" fill="rgba(234,179,8,.12)"/>
+            <text x="134" y="483" font-size="6.5" fill="#d97706">82KU01YQPG</text>
+            <text x="134" y="496" font-size="6.5" fill="#22c55e">● Em stock</text>
+            <text x="134" y="514" font-size="12" fill="#f97316" font-weight="800">599,90 €</text>
+
+            <rect x="0" y="532" width="252" height="12" fill="rgba(34,197,94,.1)"/>
+            <text x="126" y="542" font-size="7" fill="#22c55e" text-anchor="middle" font-weight="600">✓ 2 produtos visíveis — ganho vs live</text>
+            <rect x="0" y="546" width="252" height="12" fill="rgba(234,179,8,.1)"/>
+            <text x="126" y="556" font-size="7" fill="#eab308" text-anchor="middle">△ sem peek do 3.º card</text>
+          </svg>
+        </div>
+        <div class="phone-summary ps-v1">
+          <div class="phone-summary-title">Design V1 — O que mudou</div>
+          <ul>
+            <li>🔵 Banner compacto ~104px (−64px)</li>
+            <li>🔵 Chips horizontais ~34px (−72px)</li>
+            <li>🔵 +138px above-fold vs live</li>
+            <li>🔵 2 produtos visíveis (vs 1)</li>
+            <li>🔵 Counter numa faixa própria</li>
+            <li>🔴 Fundo do bloco campanha: escuro neutro</li>
+            <li>🟡 Sem peek do 3.º card</li>
+            <li>🟡 SKU ainda visível</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ══ V2 ══ -->
+      <div class="phone-col">
+        <div class="phone-label-row">
+          <span class="vdot vdot-v2"></span>
+          <span class="phone-label-text">Design V2</span>
+        </div>
+        <div class="phone-frame">
+          <svg width="252" viewBox="0 0 252 700" xmlns="http://www.w3.org/2000/svg">
+            <rect width="252" height="700" fill="#111"/>
+            <!-- header -->
+            <rect x="0" y="0" width="252" height="40" fill="#0c0c0c"/>
+            <text x="10" y="25" font-size="13" fill="#f97316" font-weight="800">PC</text>
+            <text x="28" y="25" font-size="13" fill="#fff" font-weight="800">DIG@</text>
+            <rect x="154" y="13" width="30" height="14" rx="7" fill="#2a2a2a" stroke="#3a3a3a"/>
+            <circle cx="174" cy="20" r="5.5" fill="#eab308"/>
+            <circle cx="193" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="213" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <circle cx="233" cy="20" r="8" fill="#1e1e1e" stroke="#2a2a2a"/>
+            <!-- search -->
+            <rect x="6" y="46" width="240" height="26" rx="5" fill="#1e1e1e" stroke="#2a2a2a" stroke-width="1"/>
+            <text x="18" y="63" font-size="8" fill="#555">🔍 Pesquise o seu produto aqui...</text>
+
+            <!-- BANNER COMPACTO -->
+            <rect x="0" y="78" width="4" height="104" fill="#22c55e"/>
+            <rect x="4" y="78" width="248" height="104" fill="#f97316"/>
+            <rect x="162" y="84" width="86" height="92" rx="3" fill="rgba(0,0,0,.12)"/>
+            <text x="205" y="132" font-size="7" fill="rgba(255,255,255,.2)" text-anchor="middle">[ arte ]</text>
+            <text x="12" y="96"  font-size="8"  fill="rgba(255,255,255,.55)" font-weight="600">DIAS PCDIGUIANOS</text>
+            <text x="12" y="112" font-size="12" fill="#fff" font-weight="800">GRANDES DIAS,</text>
+            <text x="12" y="127" font-size="12" fill="#fff" font-weight="800">PREÇOS PEQUENOS</text>
+            <text x="12" y="142" font-size="8"  fill="rgba(255,255,255,.7)">[24ABR_06MAI]</text>
+
+            <!-- CHIPS -->
+            <rect x="0" y="186" width="4" height="34" fill="#22c55e"/>
+            <rect x="4" y="186" width="248" height="34" fill="#141414"/>
+            <rect x="6"   y="192" width="104" height="22" rx="11" fill="#222" stroke="#2e2e2e"/>
+            <circle cx="18" cy="203" r="7" fill="#2e2e2e"/>
+            <text x="30" y="207" font-size="7" fill="#ccc">Comp. PCDIGA Gaming</text>
+            <rect x="114" y="192" width="86" height="22" rx="11" fill="#222" stroke="#2e2e2e"/>
+            <circle cx="126" cy="203" r="7" fill="#2e2e2e"/>
+            <text x="138" y="207" font-size="7" fill="#ccc">Comp. Laptop</text>
+            <rect x="204" y="192" width="42" height="22" rx="11" fill="#222" stroke="#2e2e2e"/>
+            <defs>
+              <linearGradient id="gfV2" x1="55%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#141414" stop-opacity="0"/>
+                <stop offset="100%" stop-color="#141414" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <rect x="202" y="186" width="50" height="34" fill="url(#gfV2)"/>
+
+            <!-- CAMPAIGN BLOCK V2 — ORANGE BG (key change) -->
+            <rect x="0" y="224" width="252" height="92" fill="#f97316"/>
+            <rect x="0" y="224" width="4" height="92" fill="#22c55e"/>
+            <!-- faint bg art -->
+            <rect x="110" y="228" width="136" height="84" rx="3" fill="rgba(0,0,0,.12)"/>
+            <text x="178" y="273" font-size="7.5" fill="rgba(255,255,255,.15)" text-anchor="middle">PCDIGUIANOS</text>
+            <text x="178" y="284" font-size="7.5" fill="rgba(255,255,255,.1)" text-anchor="middle">GRANDES DIAS</text>
+            <!-- Title big -->
+            <text x="12" y="248" font-size="15" fill="#fff" font-weight="800">DIAS PCDIGUIANOS</text>
+            <!-- Counter on orange -->
+            <rect x="12"  y="256" width="32" height="26" rx="4" fill="rgba(0,0,0,.28)"/>
+            <text x="28"  y="274" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">37</text>
+            <text x="28"  y="287" font-size="5.5" fill="rgba(255,255,255,.7)" text-anchor="middle">horas</text>
+            <rect x="50"  y="256" width="32" height="26" rx="4" fill="rgba(0,0,0,.28)"/>
+            <text x="66"  y="274" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">05</text>
+            <text x="66"  y="287" font-size="5.5" fill="rgba(255,255,255,.7)" text-anchor="middle">min</text>
+            <rect x="88"  y="256" width="32" height="26" rx="4" fill="rgba(0,0,0,.28)"/>
+            <text x="104" y="274" font-size="13" fill="#fff" font-weight="800" text-anchor="middle">42</text>
+            <text x="104" y="287" font-size="5.5" fill="rgba(255,255,255,.7)" text-anchor="middle">seg</text>
+            <!-- CTA on orange -->
+            <rect x="130" y="254" width="114" height="34" rx="5" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>
+            <text x="187" y="275" font-size="9.5" fill="#fff" font-weight="800" text-anchor="middle">VER CAMPANHA</text>
+
+            <!-- annotation -->
+            <rect x="0" y="318" width="252" height="12" fill="rgba(34,197,94,.2)"/>
+            <text x="126" y="328" font-size="7" fill="#22c55e" text-anchor="middle" font-weight="600">✓ fundo laranja — identidade forte e imediata</text>
+
+            <!-- 2 PRODUCT CARDS (white) -->
+            <rect x="0" y="334" width="252" height="362" fill="#111"/>
+            <rect x="4"   y="338" width="118" height="198" rx="5" fill="#fff"/>
+            <rect x="8"   y="342" width="62"  height="13"  rx="3" fill="#f97316"/>
+            <text x="39"  y="353" font-size="6.5" fill="#fff" font-weight="700" text-anchor="middle">PCDIGUIANOS</text>
+            <rect x="8"   y="360" width="110" height="78"  rx="3" fill="#f0f0f0"/>
+            <text x="63" y="401" font-size="7.5" fill="#ccc" text-anchor="middle">[ produto ]</text>
+            <text x="8"   y="451" font-size="7.5" fill="#1a1a1a" font-weight="600">Projetor LG HU85LS</text>
+            <text x="8"   y="463" font-size="7.5" fill="#1a1a1a">CineBeam Laser 4K...</text>
+            <text x="8"   y="475" font-size="6.5" fill="#888">Cinema em casa...</text>
+            <rect x="8"   y="480" width="104" height="10" rx="2" fill="rgba(234,179,8,.18)"/>
+            <text x="8"   y="489" font-size="6.5" fill="#d97706">82KU01YQPG ← pendente</text>
+            <text x="8"   y="502" font-size="6.5" fill="#22c55e">● Em stock  Entrega 10 Jan</text>
+            <text x="8"   y="520" font-size="12" fill="#f97316" font-weight="800">599,90 €</text>
+
+            <rect x="130" y="338" width="118" height="198" rx="5" fill="#fff"/>
+            <rect x="134" y="342" width="62"  height="13"  rx="3" fill="#f97316"/>
+            <rect x="134" y="360" width="110" height="78"  rx="3" fill="#f0f0f0"/>
+            <text x="189" y="401" font-size="7.5" fill="#ccc" text-anchor="middle">[ produto ]</text>
+            <text x="134" y="451" font-size="7.5" fill="#1a1a1a" font-weight="600">Projetor LG HU85LS</text>
+            <text x="134" y="463" font-size="7.5" fill="#1a1a1a">CineBeam Laser 4K...</text>
+            <rect x="134" y="480" width="104" height="10" rx="2" fill="rgba(234,179,8,.12)"/>
+            <text x="134" y="489" font-size="6.5" fill="#d97706">82KU01YQPG</text>
+            <text x="134" y="502" font-size="6.5" fill="#22c55e">● Em stock</text>
+            <text x="134" y="520" font-size="12" fill="#f97316" font-weight="800">599,90 €</text>
+
+            <rect x="0" y="538" width="252" height="12" fill="rgba(34,197,94,.1)"/>
+            <text x="126" y="548" font-size="7" fill="#22c55e" text-anchor="middle" font-weight="600">✓ 2 produtos + identidade forte</text>
+            <rect x="0" y="552" width="252" height="12" fill="rgba(234,179,8,.1)"/>
+            <text x="126" y="562" font-size="7" fill="#eab308" text-anchor="middle">△ sem peek do 3.º card — pendente</text>
+            <rect x="0" y="566" width="252" height="12" fill="rgba(168,85,247,.08)"/>
+            <text x="126" y="576" font-size="7" fill="#c084fc" text-anchor="middle">✦ "VER MAIS" eliminado → 1 CTA claro</text>
+          </svg>
+        </div>
+        <div class="phone-summary ps-v2">
+          <div class="phone-summary-title">Design V2 — Novidades</div>
+          <ul>
+            <li>🟢 Fundo laranja no bloco campanha</li>
+            <li>🟢 Título "DIAS PCDIGUIANOS" grande e integrado</li>
+            <li>🟢 Counter coerente com identidade visual</li>
+            <li>🟢 "VER MAIS" redundante eliminado</li>
+            <li>🟢 CTA integrado no bloco laranja</li>
+            <li>🟡 Sem peek do 3.º card — pendente</li>
+            <li>🟡 SKU visível — pendente remover</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /phones-grid -->
+  </div>
+</section>
+
+<!-- ═══════════════════ ANÁLISE ZONA A ZONA ═══════════════════ -->
+<section class="section" id="zonas">
+  <div class="container">
+    <div class="section-title">Análise zona a zona — Live · V1 · V2</div>
+    <div style="overflow-x:auto;">
+      <table class="vtable">
+        <thead>
+          <tr>
+            <th style="width:12%;">Zona</th>
+            <th style="width:26%;">Live</th>
+            <th style="width:26%;">Design V1</th>
+            <th style="width:26%;">Design V2</th>
+            <th style="width:10%;">Tendência</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="zone-name">Banner</td>
+            <td class="cell-bad">~168px. Domina o ecrã. Copy + arte + CTA dentro. 30%+ do viewport.</td>
+            <td class="cell-good">~104px. Compacto. −64px. Mantém mensagem e arte.</td>
+            <td class="cell-good">~104px. Igual ao V1. Melhoria mantida.</td>
+            <td><span class="chip chip-bad">Live ✗</span><br><span class="chip chip-good">V1/V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Categorias</td>
+            <td class="cell-bad">Círculos grandes ~106px. Labels tiny abaixo. Muito espaço por pouco conteúdo.</td>
+            <td class="cell-good">Chips ~34px com ícone + label. Touch ≥44px. Scroll horizontal natural.</td>
+            <td class="cell-good">Igual ao V1. Melhoria mantida.</td>
+            <td><span class="chip chip-bad">Live ✗</span><br><span class="chip chip-good">V1/V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Above-fold — overhead</td>
+            <td class="cell-bad">~278px de navegação antes de qualquer produto. Em 375px viewport = 74% overhead.</td>
+            <td class="cell-good">~142px. +136px recuperados. Produto entra muito mais cedo.</td>
+            <td class="cell-good">~142px. Mantém o ganho do V1.</td>
+            <td><span class="chip chip-bad">Live ✗</span><br><span class="chip chip-good">V1/V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Fundo bloco campanha</td>
+            <td class="cell-bad">Não aplicável — sem bloco separado. Counter dentro do card laranja.</td>
+            <td class="cell-bad">Fundo escuro neutro (~7% laranja). Sem ligação visual à campanha.</td>
+            <td class="cell-good">Laranja sólido (#f97316). Identidade imediata. Igual à cor do banner.</td>
+            <td><span class="chip chip-bad">Live/V1 ✗</span><br><span class="chip chip-good">V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Counter de campanha</td>
+            <td class="cell-bad">Dentro do card laranja grande. Comprimido. Difícil de ler. Se async, aparece tarde.</td>
+            <td class="cell-ok">Faixa própria, números grandes. Mas sobre fundo neutro — sem contexto de campanha.</td>
+            <td class="cell-good">Integrado no bloco laranja. Blocos semi-transparentes sobre laranja. Alta coerência visual.</td>
+            <td><span class="chip chip-bad">Live ✗</span><br><span class="chip chip-ok">V1 ~</span><br><span class="chip chip-good">V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Produtos visíveis</td>
+            <td class="cell-bad">1 produto. Card de campanha ocupa ~54% da largura.</td>
+            <td class="cell-good">2 produtos em grelha 2-col. +100% vs live.</td>
+            <td class="cell-good">2 produtos. Mantém o ganho do V1.</td>
+            <td><span class="chip chip-bad">Live ✗</span><br><span class="chip chip-good">V1/V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Peek 3.º card</td>
+            <td class="cell-bad">Sem peek. Só 1 produto visível.</td>
+            <td class="cell-bad">Sem peek. Cards a 50% preenchem tudo.</td>
+            <td class="cell-bad">Sem peek. Cards a 50% preenchem tudo.</td>
+            <td><span class="chip chip-bad">Todos ✗</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">CTAs — hierarquia</td>
+            <td class="cell-ok">"Dias Pcdiguianos" + "VER MAIS" + "VER CAMPANHA" dentro do card. 3 elementos a competir.</td>
+            <td class="cell-ok">"DIAS PCDIGUIANOS" + "VER MAIS" na mesma linha + "VER CAMPANHA" abaixo. Redundância.</td>
+            <td class="cell-good">"DIAS PCDIGUIANOS" integrado + só "VER CAMPANHA". 1 CTA principal. Foco claro.</td>
+            <td><span class="chip chip-ok">Live/V1 ~</span><br><span class="chip chip-good">V2 ✓</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">SKU nos cards</td>
+            <td class="cell-bad">Visível. Peso igual a nome e preço.</td>
+            <td class="cell-bad">Visível. Não resolvido.</td>
+            <td class="cell-bad">Visível. Pendente remoção mobile.</td>
+            <td><span class="chip chip-bad">Todos ✗</span></td>
+          </tr>
+          <tr>
+            <td class="zone-name">Consistência de cor</td>
+            <td class="cell-bad">Banner laranja → categorias → secção com card laranja. Consistente mas pesado.</td>
+            <td class="cell-ok">Banner laranja → chips → bloco escuro neutro. Quebra de fio condutor de cor.</td>
+            <td class="cell-good">Banner laranja → chips → bloco laranja → badges laranja nos cards. Fio condutor perfeito.</td>
+            <td><span class="chip chip-ok">Live ~</span><br><span class="chip chip-ok">V1 ~</span><br><span class="chip chip-good">V2 ✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ UX PRO MAX ═══════════════════ -->
+<section class="section" id="uxpromax">
+  <div class="container">
+    <div class="section-title">UX Pro Max — scorecard 3 versões</div>
+    <div style="background:rgba(168,85,247,.06); border:1px solid rgba(168,85,247,.2); border-radius:12px; padding:20px 24px;">
+      <div style="font-size:11px; font-weight:700; color:#c084fc; margin-bottom:14px; text-transform:uppercase; letter-spacing:.5px;">✦ Regras avaliadas</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:10px; font-size:12px;">
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">touch-target-size — min 44×44px <span style="font-size:10px; color:#c084fc; font-family:monospace;">CRITICAL</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(234,179,8,.12); color:#eab308; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ~</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ✓</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✓</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">Live: círculos OK mas labels tiny. V1/V2: chips ≥44px.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">layout-responsive — above-fold <span style="font-size:10px; color:#c084fc; font-family:monospace;">HIGH</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ✗</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ✓</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✓</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">Live: 74% viewport em navegação. V1/V2: ~38%.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">horizontal-scroll — peek/fade <span style="font-size:10px; color:#c084fc; font-family:monospace;">HIGH</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ✗</span>
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ✗</span>
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✗</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">Nenhuma versão tem peek do 3.º card implementado.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">consistency — cor de campanha <span style="font-size:10px; color:#c084fc; font-family:monospace;">MEDIUM</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(234,179,8,.12); color:#eab308; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ~</span>
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ✗</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✓</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">V2 cria fio condutor laranja: banner→bloco→badges.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">CTAs — acção principal única <span style="font-size:10px; color:#c084fc; font-family:monospace;">HIGH</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(234,179,8,.12); color:#eab308; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ~</span>
+            <span style="background:rgba(234,179,8,.12); color:#eab308; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ~</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✓</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">V2 eliminou "VER MAIS" redundante. 1 CTA único.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">style-match — SKU hierarquia <span style="font-size:10px; color:#c084fc; font-family:monospace;">HIGH</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ✗</span>
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ✗</span>
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✗</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">SKU visível e com peso igual a nome/preço em todas.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">hover-vs-tap — interatividade <span style="font-size:10px; color:#c084fc; font-family:monospace;">CRITICAL</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ✗</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ✓</span>
+            <span style="background:rgba(34,197,94,.12); color:#22c55e; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ✓</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">Live: círculos não comunicam clicabilidade. V1/V2: chips ✓.</div>
+        </div>
+
+        <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+          <div style="font-weight:600; margin-bottom:8px; font-size:13px;">no-emoji-icons — SVG only <span style="font-size:10px; color:#c084fc; font-family:monospace;">HIGH</span></div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:rgba(239,68,68,.12); color:#ef4444; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">Live ✗</span>
+            <span style="background:rgba(234,179,8,.12); color:#eab308; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V1 ~</span>
+            <span style="background:rgba(234,179,8,.12); color:#eab308; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;">V2 ~</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--muted); margin-top:6px;">"🔥 Top Vendas" em Live. V1/V2: a confirmar nos cards.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ISSUES ═══════════════════ -->
+<section class="section" id="issues">
+  <div class="container">
+    <div class="section-title">Issues por versão — o que ficou por resolver</div>
+
+    <div class="issue">
+      <span class="issue-badge badge-positive">✓ V1 + V2</span>
+      <div>
+        <div class="issue-title">Banner compacto + chips horizontais — resolvido desde V1</div>
+        <p class="issue-body">Os dois maiores problemas de espaço do Live foram resolvidos em V1 e mantidos em V2: banner −64px e categorias −72px. Total de +136px above-fold. O produto entra no viewport muito mais cedo.</p>
+        <div class="ux-rule">✦ UX Pro Max: layout-responsive · touch-target-size</div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <span class="issue-badge badge-positive">✓ V2 apenas</span>
+      <div>
+        <div class="issue-title">Identidade de campanha no bloco — resolvido em V2</div>
+        <p class="issue-body">Em V1 o bloco de campanha ficava sobre fundo escuro neutro, sem ligação à cor da campanha. Em V2, fundo laranja sólido cria identidade imediata. O utilizador reconhece o contexto de campanha sem ler o texto. Era o maior issue de V1.</p>
+        <div class="ux-rule">✦ UX Pro Max: consistency · style-match ecommerce</div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <span class="issue-badge badge-positive">✓ V2 apenas</span>
+      <div>
+        <div class="issue-title">"VER MAIS" redundante — eliminado em V2</div>
+        <p class="issue-body">Live e V1 tinham múltiplos CTAs a competir no mesmo bloco. V2 eliminou o "VER MAIS" e mantém apenas "VER CAMPANHA" como acção principal, integrado no bloco laranja.</p>
+        <div class="ux-rule">✦ UX Pro Max: CTAs — acção principal única por bloco</div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <span class="issue-badge badge-high">PRIORITÁRIO</span>
+      <div>
+        <div class="issue-title">Peek do 3.º card — pendente em todas as versões</div>
+        <p class="issue-body">Live, V1 e V2 — nenhuma versão tem peek do 3.º produto. Os cards preenchem 100% da largura, não sinalizando ao utilizador que existe mais conteúdo em scroll. Este é o próximo passo imediato para V2.</p>
+        <div class="issue-fix">💡 Card width: <code>50%</code> → <code>44vw</code>. O 3.º card aparece com ~8vw à direita. Fade gradient no container.</div>
+        <div class="ux-rule">✦ UX Pro Max: horizontal-scroll — peek obrigatório</div>
+      </div>
+    </div>
+
+    <div class="issue">
+      <span class="issue-badge badge-medium">MÉDIO</span>
+      <div>
+        <div class="issue-title">SKU nos cards — pendente em todas as versões</div>
+        <p class="issue-body">A referência SKU (82KU01YQPG) está visível com peso igual a nome e preço em Live, V1 e V2. Uma linha de CSS resolve.</p>
+        <div class="issue-fix">💡 <code>@media (max-width: 768px) &#123; .product-sku &#123; display: none; &#125; &#125;</code></div>
+        <div class="ux-rule">✦ UX Pro Max: style-match e-commerce — hierarquia nome → preço → stock</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ VERDICT ═══════════════════ -->
+<section class="section" id="veredicto">
+  <div class="container">
+    <div class="section-title">Veredicto final</div>
+
+    <div class="verdict">
+      <div class="verdict-title">✅ V2 é a versão correta — 2 fixes rápidos para potencial máximo</div>
+      <p>A evolução das 3 versões é coerente e cada iteração resolve problemas reais. V1 recuperou 136px above-fold — o maior salto único. V2 completou o trabalho ao resolver a identidade visual do campaign block com o fundo laranja, criando consistência de cor banner → bloco → cards.</p>
+      <p style="margin-top:10px;">V2 está pronta para produção. Os 2 fixes restantes — peek do 3.º card e remoção do SKU mobile — são ambos de CSS e fazem o score subir de 8.5 para próximo de 9.5.</p>
+    </div>
+
+    <!-- Score bars -->
+    <div style="margin-top:22px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 22px;">
+      <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">Progressão de score</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:12px; color:var(--muted); width:80px; flex-shrink:0;">Live</span>
+          <div style="flex:1; background:var(--surface2); border-radius:20px; height:10px; overflow:hidden;">
+            <div style="width:50%; height:100%; background:#f87171; border-radius:20px;"></div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#f87171; width:32px;">5.0</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:12px; color:var(--muted); width:80px; flex-shrink:0;">Design V1</span>
+          <div style="flex:1; background:var(--surface2); border-radius:20px; height:10px; overflow:hidden;">
+            <div style="width:70%; height:100%; background:#60a5fa; border-radius:20px;"></div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#60a5fa; width:32px;">7.0</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:12px; color:var(--muted); width:80px; flex-shrink:0;">Design V2</span>
+          <div style="flex:1; background:var(--surface2); border-radius:20px; height:10px; overflow:hidden;">
+            <div style="width:85%; height:100%; background:#22c55e; border-radius:20px;"></div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#22c55e; width:32px;">8.5</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:12px; color:var(--muted); width:80px; flex-shrink:0;">V2 + fixes</span>
+          <div style="flex:1; background:var(--surface2); border-radius:20px; height:10px; overflow:hidden;">
+            <div style="width:95%; height:100%; background:linear-gradient(to right, #22c55e, #4ade80); border-radius:20px;"></div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#4ade80; width:32px;">~9.5</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="priority-grid">
+      <div class="priority-card p1">
+        <div class="priority-label">✓ Resolvido ao longo das versões</div>
+        <div class="priority-item">Banner compacto (V1/V2)</div>
+        <div class="priority-item">Chips horizontais (V1/V2)</div>
+        <div class="priority-item">+136px above-fold (V1/V2)</div>
+        <div class="priority-item">2 produtos visíveis (V1/V2)</div>
+        <div class="priority-item">Counter fora do card (V1/V2)</div>
+        <div class="priority-item">Fundo laranja campanha (V2)</div>
+        <div class="priority-item">"VER MAIS" eliminado (V2)</div>
+      </div>
+      <div class="priority-card p2">
+        <div class="priority-label">⚠ Prioritário — antes de publicar</div>
+        <div class="priority-item">Peek do 3.º card (44vw)</div>
+        <div class="priority-item">Remover SKU em mobile</div>
+      </div>
+      <div class="priority-card p3">
+        <div class="priority-label">○ Secundário</div>
+        <div class="priority-item">Fade formal scroll categorias</div>
+        <div class="priority-item">Substituir emoji 🔥 por SVG</div>
+        <div class="priority-item">Arte banner 3:1 mobile dedicado</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer style="background:var(--surface); border-top:1px solid var(--border); padding:18px 0;">
+  <div class="container" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; align-items:center;">
+    <span style="font-size:12px; color:var(--muted);">PCDIGA · Homepage Mobile · Live → V1 → V2 · Maio 2026</span>
+    <span style="font-size:12px; color:var(--muted);">✦ UX Pro Max · 5.0 → 7.0 → 8.5 → ~9.5 com fixes</span>
+  </div>
+</footer>
+
+</body>
+</html>
