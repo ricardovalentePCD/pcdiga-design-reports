@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCDIGA Seguros - Relatório v1 (Especificação Técnica)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0e1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            border-bottom: 2px solid #FF6B35;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 42px;
+            color: #FF6B35;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #8b949e;
+            margin-bottom: 20px;
+        }
+
+        .metadata {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 13px;
+            color: #6e7681;
+            flex-wrap: wrap;
+        }
+
+        .metadata span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #FF6B35;
+        }
+
+        .subsection-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        /* CARDS */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 25px;
+            border-left: 4px solid #FF6B35;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p {
+            font-size: 13px;
+            color: #8b949e;
+            line-height: 1.6;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 12px;
+        }
+
+        .card li {
+            font-size: 13px;
+            color: #8b949e;
+            padding-left: 18px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #FF6B35;
+        }
+
+        /* FEATURE HIGHLIGHTS */
+        .features {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.05) 100%);
+            border: 1px solid #FF6B35;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 4px;
+        }
+
+        .feature-content p {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        /* FLOWCHART */
+        .flowchart {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .flowchart-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 12px;
+        }
+
+        .flowchart-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #FF6B35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .flowchart-arrow {
+            text-align: center;
+            color: #FF6B35;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        /* DECISION BOXES */
+        .decision-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .decision-section h3 {
+            color: #FF6B35;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .decision-content {
+            margin-left: 30px;
+        }
+
+        .decision-content p {
+            font-size: 13px;
+            color: #8b949e;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .why-section {
+            background: rgba(255, 107, 53, 0.05);
+            border-left: 3px solid #FF6B35;
+            padding: 12px 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        .why-section strong {
+            color: #FF6B35;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline-item {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .timeline-item:before {
+            content: "";
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: #FF6B35;
+            border-radius: 50%;
+            border: 2px solid #0e1117;
+        }
+
+        .timeline-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item p {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        /* METRICS */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .metric {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B35;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #8b949e;
+        }
+
+        /* CHECKLIST */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #30363d;
+            font-size: 13px;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #FF6B35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+            color: #FF6B35;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid #30363d;
+            padding: 30px 0;
+            text-align: center;
+            color: #6e7681;
+            font-size: 12px;
+        }
+
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #30363d;
+            color: #8b949e;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge.critical {
+            background: rgba(248, 81, 73, 0.2);
+            color: #f85149;
+        }
+
+        .badge.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .metadata {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .card-grid,
+            .feature-grid,
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        code {
+            background: #0d1117;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #79c0ff;
+            font-family: 'Monaco', monospace;
+            font-size: 12px;
+        }
+
+        pre {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 12px;
+            color: #79c0ff;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛡️ PCDIGA Seguros - Relatório v1</h1>
+        <p class="subtitle">Especificação Técnica + Wireframe Interativo</p>
+        <div class="metadata">
+            <span>📅 Data: 3 Agosto 2026</span>
+            <span>📋 Tipo: Especificação Completa</span>
+            <span>✅ Status: Pronto para Implementação</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- EXECUTIVE SUMMARY -->
+        <section>
+            <h2 class="section-title">📌 Resumo Executivo</h2>
+
+            <div class="features">
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <h4>Objetivo</h4>
+                            <p>Integrar seguros (PCDIGACare) no configurador quando há montagem selecionada</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-content">
+                            <h4>Abordagem</h4>
+                            <p>Modal overlay + Bloco no carrinho com checkboxes</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-content">
+                            <h4>Impacto Esperado</h4>
+                            <p>+15% conversão de seguros, melhor UX</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-content">
+                            <h4>Timeline</h4>
+                            <p>4 semanas (MVP → produção)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROBLEM & SOLUTION -->
+        <section>
+            <h2 class="section-title">🎯 Problema & Solução</h2>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>❌ O Desafio</h3>
+                    <p>Implementar seguros no configurador apenas quando há montagem selecionada, sem criar fricção no fluxo.</p>
+                    <ul>
+                        <li>3 ficheiros de referência (config, modal, LP)</li>
+                        <li>Decisões de UX a validar</li>
+                        <li>Integração com carrinho</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>✅ A Solução</h3>
+                    <p>Fluxo de 3 passos com modal contextualizador e controlo no carrinho.</p>
+                    <ul>
+                        <li>Checkbox na Revisão de Componentes</li>
+                        <li>Modal abre imediatamente</li>
+                        <li>Carrinho com bloco separado</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 KEY DECISIONS -->
+        <section>
+            <h2 class="section-title">🎨 3 Decisões de Design</h2>
+
+            <div class="decision-section">
+                <h3>1️⃣ ONDE colocar montagem?</h3>
+                <div class="decision-content">
+                    <p><strong>Resposta:</strong> Na Revisão de Componentes (com checkbox)</p>
+                    <div class="why-section">
+                        <strong>Porquê:</strong> Utilizador vê contexto completo, decisão consciente, sem criar novo passo. Lugar natural como "componente".
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-section">
+                <h3>2️⃣ QUANDO mostrar seguros?</h3>
+                <div class="decision-content">
+                    <p><strong>Resposta:</strong> Logo após marcar montagem (modal overlay)</p>
+                    <div class="why-section">
+                        <strong>Porquê:</strong> Contexto quente, momentum psicológico alto, complementa decisão anterior, não interrompe fluxo.
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-section">
+                <h3>3️⃣ Obrigatório ou opcional?</h3>
+                <div class="decision-content">
+                    <p><strong>Resposta:</strong> Recomendado + Warning (não obrigatório)</p>
+                    <div class="why-section">
+                        <strong>Porquê:</strong> Liberdade do utilizador, soft nudges convertem melhor, warning ao pular reduz fricção. Dados: soft constraints > obrigatoriedade.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLOW -->
+        <section>
+            <h2 class="section-title">🔄 Fluxo UX</h2>
+
+            <div class="flowchart">
+                <div class="flowchart-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Revisão de Componentes</h4>
+                        <p>Utilizador marca checkbox "Incluir montagem?" (39,90€)</p>
+                    </div>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Modal de Seguros</h4>
+                        <p>Abre automaticamente com 3-4 opções PCDIGACare. Utilizador escolhe, pula, ou fecha.</p>
+                    </div>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Finalizar Configuração</h4>
+                        <p>Retorna com montagem + seguro (se escolhido) visíveis. Totais atualizados.</p>
+                    </div>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-step">
+                    <div class="step-number">✓</div>
+                    <div class="step-content">
+                        <h4>Carrinho</h4>
+                        <p>Bloco "Protege o teu equipamento" com checkboxes para selecionar/deselecionar seguros.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SUCCESS METRICS -->
+        <section>
+            <h2 class="section-title">📊 Métricas de Sucesso</h2>
+
+            <div class="metrics-grid">
+                <div class="metric">
+                    <div class="metric-value">+15%</div>
+                    <div class="metric-label">Conversion Rate (meta)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">Modal Open Rate</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">&lt;30%</div>
+                    <div class="metric-label">Drop-off Rate</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">+€/AOV</div>
+                    <div class="metric-label">Average Order Value</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DELIVERABLES -->
+        <section>
+            <h2 class="section-title">📦 Entregas</h2>
+
+            <div class="card">
+                <h3>✅ Este Relatório v1</h3>
+                <ul>
+                    <li>Especificação técnica completa (40+ páginas MD)</li>
+                    <li>Layouts detalhados (ASCII diagrams)</li>
+                    <li>Código JSX de exemplo</li>
+                    <li>Guia de cores, tipografia, responsividade</li>
+                    <li>Acessibilidade (WCAG checklist)</li>
+                    <li>Fases de implementação + métricas</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>✅ Wireframe Interativo</h3>
+                <ul>
+                    <li>HTML funcional (clique para interagir)</li>
+                    <li>Checkbox que abre modal</li>
+                    <li>Grid de cards de seguros</li>
+                    <li>Toasts de sucesso/warning</li>
+                    <li>Cálculo de totais dinâmico</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>✅ Relatório v2 (Fluxos 1 vs 2)</h3>
+                <ul>
+                    <li>Análise comparativa de 2 fluxos de design</li>
+                    <li>Pontuação 7.0 vs 8.5/10</li>
+                    <li>Prós/contras por aspecto</li>
+                    <li>Recomendação final: Fluxo 2</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- RECOMMENDATION -->
+        <section>
+            <h2 class="section-title">✅ Recomendação Final</h2>
+
+            <div style="background: linear-gradient(135deg, #1f6feb 0%, #388bfd 100%); border-radius: 8px; padding: 30px; color: white;">
+                <h3 style="margin-bottom: 15px; font-size: 20px;">Avançar com Implementação</h3>
+                <p style="margin-bottom: 10px;">
+                    ✓ Especificação validada (3 decisões fundamentadas)<br>
+                    ✓ Wireframe interativo pronto<br>
+                    ✓ Código de exemplo incluído<br>
+                    ✓ Timeline clara (4 semanas)
+                </p>
+                <p style="font-size: 14px; margin-top: 15px;">
+                    <strong>Ganhos esperados:</strong> +15% conversão, melhor UX, WCAG AA completo, responsivo em mobile.
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQS -->
+        <section>
+            <h2 class="section-title">❓ Perguntas Comuns</h2>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>O seguro é obrigatório?</h3>
+                    <p>Não. Recomendado + warning ao pular. Utilizador decide.</p>
+                </div>
+
+                <div class="card">
+                    <h3>E se desmarcar montagem depois?</h3>
+                    <p>Seguro é removido automaticamente (ou pede confirmação).</p>
+                </div>
+
+                <div class="card">
+                    <h3>Posso adicionar seguro no carrinho?</h3>
+                    <p>Sim. Modal também aparece no carrinho se necessário.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Como fica em mobile?</h3>
+                    <p>Modal full-width com grid 1 coluna (cards empilhados).</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Relatório Técnico gerado em 3 Agosto 2026 | PCDIGA Configurador Seguros | v1 Especificação Completa</p>
+        <p style="margin-top: 10px; color: #6e7681; font-size: 11px;">
+            Todos os ficheiros complementares disponíveis na pasta do projeto.
+        </p>
+    </footer>
+</body>
+</html>
