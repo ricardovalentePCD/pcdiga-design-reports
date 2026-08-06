@@ -27,7 +27,6 @@
   h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
   .subtitle { color: var(--text-muted); font-size: 15px; margin-bottom: 48px; }
   .review-list { display: flex; flex-direction: column; gap: 12px; }
-
   /* --- Card individual --- */
   .review-card {
     display: flex; justify-content: space-between; align-items: center;
@@ -41,10 +40,8 @@
   .review-info .meta .score { color: var(--green); font-weight: 700; }
   .arrow { color: var(--text-muted); font-size: 20px; transition: color .2s, transform .2s; }
   .review-card:hover .arrow { color: var(--accent); transform: translateX(3px); }
-
   /* --- Pasta / Folder --- */
   .folder { border-radius: 10px; }
-
   .folder-header {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
@@ -53,13 +50,11 @@
     user-select: none;
   }
   .folder-header:hover { border-color: var(--accent); transform: translateY(-1px); }
-
   .folder.open .folder-header {
     border-radius: 10px 10px 0 0;
     border-bottom-color: transparent;
     border-color: var(--accent);
   }
-
   .folder-title { display: flex; align-items: center; gap: 12px; }
   .folder-title h3 { font-size: 16px; font-weight: 600; }
   .folder-icon {
@@ -76,7 +71,6 @@
   }
   .folder.open .folder-chevron { transform: rotate(90deg); color: var(--accent); }
   .folder-header:hover .folder-chevron { color: var(--accent); }
-
   /* --- Conteúdo colapsável --- */
   .folder-content {
     max-height: 0;
@@ -95,7 +89,6 @@
     padding: 12px 16px 16px 16px;
     display: flex; flex-direction: column; gap: 8px;
   }
-
   /* --- Card dentro de pasta --- */
   .folder-content .review-card {
     background: rgba(255,255,255,0.02);
@@ -108,7 +101,6 @@
     border-color: var(--accent);
     transform: none;
   }
-
   footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; }
   @media (max-width: 640px) { .wrapper { padding: 32px 16px; } }
 </style>
@@ -118,9 +110,7 @@
   <div class="logo">PCDIGA</div>
   <h1>Design Reviews</h1>
   <p class="subtitle">Relatórios de análise e melhoria da experiência de interface</p>
-
   <div class="review-list">
-
     <!-- PASTA — Homepage Mobile -->
     <div class="folder" onclick="this.classList.toggle('open')">
       <div class="folder-header">
@@ -137,7 +127,6 @@
       </div>
       <div class="folder-content">
         <div class="folder-content-inner">
-
           <a class="review-card" href="pcdiga-ux-mobile-audit" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Relatório análise UX/UI mobile</h3>
@@ -149,7 +138,6 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
           <a class="review-card" href="homepage-mobile-ux/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Alterações design homepage mobile</h3>
@@ -161,12 +149,10 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
         </div>
       </div>
     </div>
     <!-- /PASTA Homepage Mobile -->
-
     <!-- PASTA — Página dedicada seguros -->
     <div class="folder" onclick="this.classList.toggle('open')">
       <div class="folder-header">
@@ -183,7 +169,6 @@
       </div>
       <div class="folder-content">
         <div class="folder-content-inner">
-
           <a class="review-card" href="pagina-dedicada-seguros/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Página dedicada seguros</h3>
@@ -195,7 +180,6 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
           <a class="review-card" href="pagina-dedicada-segurosV2/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Página dedicada seguros — V2</h3>
@@ -207,7 +191,6 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
           <a class="review-card" href="pagina-dedicada-segurosV3/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Página dedicada seguros — V3</h3>
@@ -219,12 +202,10 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
         </div>
       </div>
     </div>
     <!-- /PASTA Página dedicada seguros -->
-
     <!-- Card individual — Conta utilizador -->
     <a class="review-card" href="conta-utilizador/">
       <div class="review-info">
@@ -236,7 +217,6 @@
       </div>
       <span class="arrow">&#8594;</span>
     </a>
-
     <!-- PASTA — Análise Geral PCDIGA -->
     <div class="folder" onclick="this.classList.toggle('open')">
       <div class="folder-header">
@@ -253,7 +233,6 @@
       </div>
       <div class="folder-content">
         <div class="folder-content-inner">
-
           <a class="review-card" href="analise-completa-pcdiga/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Análise homepage / Página catálogo e produto</h3>
@@ -264,7 +243,6 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
           <a class="review-card" href="pcdiga-ux-audit/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Relatório auditoria UX e análise competitiva</h3>
@@ -275,12 +253,10 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
         </div>
       </div>
     </div>
     <!-- /PASTA Análise Geral PCDIGA -->
-
     <!-- PASTA — Configurador Apple -->
     <div class="folder" onclick="this.classList.toggle('open')">
       <div class="folder-header">
@@ -297,7 +273,6 @@
       </div>
       <div class="folder-content">
         <div class="folder-content-inner">
-
           <a class="review-card" href="configurador-apple-v2/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Configurador Apple — PCDIGA V2</h3>
@@ -309,7 +284,6 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
           <a class="review-card" href="configurador-apple/" onclick="event.stopPropagation()">
             <div class="review-info">
               <h3>Configurador Apple — PCDIGA V1</h3>
@@ -321,12 +295,50 @@
             </div>
             <span class="arrow">&#8594;</span>
           </a>
-
         </div>
       </div>
     </div>
     <!-- /PASTA Configurador Apple -->
-
+    <!-- PASTA — Configurador PCDIGA Seguro -->
+    <div class="folder" onclick="this.classList.toggle('open')">
+      <div class="folder-header">
+        <div>
+          <div class="folder-title">
+            <div class="folder-icon">🛡️</div>
+            <h3>Configurador PCDIGA Seguro</h3>
+          </div>
+          <div class="folder-meta">2 relatórios</div>
+        </div>
+        <span class="folder-chevron">&#9656;</span>
+      </div>
+      <div class="folder-content">
+        <div class="folder-content-inner">
+          <a class="review-card" href="seguros-v1-v2/index-v1.html" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Relatório v1 — Especificação Técnica</h3>
+              <div class="meta">
+                <span>3 Agosto 2026</span>
+                <span class="score">9/10</span>
+                <span>Decisões de design · Fluxo UX · Timeline 4 fases</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
+          <a class="review-card" href="seguros-v1-v2/index-v2.html" onclick="event.stopPropagation()">
+            <div class="review-info">
+              <h3>Relatório v2 — Design Review (Fluxo 1 vs 2)</h3>
+              <div class="meta">
+                <span>3 Agosto 2026</span>
+                <span class="score">8.5/10</span>
+                <span>Análise comparativa · Recomendação: Fluxo 2 · +15% conversão</span>
+              </div>
+            </div>
+            <span class="arrow">&#8594;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- /PASTA Configurador PCDIGA Seguro -->
     <!-- Card individual — Página de Produto Tabs -->
     <a class="review-card" href="pagina-produto-tabs/">
       <div class="review-info">
@@ -339,9 +351,7 @@
       </div>
       <span class="arrow">&#8594;</span>
     </a>
-
   </div>
-
   <footer>PCDIGA Design Team &middot; Powered by GitHub Pages</footer>
 </div>
 </body>
